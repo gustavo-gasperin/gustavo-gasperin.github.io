@@ -287,6 +287,63 @@ section{position:relative}
 .nav-hide{display:none}
 @media (min-width:760px){.nav-hide{display:inline-block}}
 
+/* Hamburger — only below the breakpoint, where the inline links drop out.
+   Everything else in the bar (languages, theme) stays where it is. */
+.nav-burger{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  width:26px;height:26px;
+  margin-left:-2px;
+  color:var(--ink-52);
+  transition:color .45s var(--ease-expo);
+}
+.nav-burger:hover{color:var(--brass)}
+.burger-lines{display:block;width:19px}
+.burger-lines i{
+  display:block;
+  height:1.5px;
+  background:currentColor;
+  transition:transform .5s var(--ease-expo),opacity .3s var(--ease-expo);
+}
+.burger-lines i + i{margin-top:5px}
+.nav.is-open .burger-lines i:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav.is-open .burger-lines i:nth-child(2){opacity:0}
+.nav.is-open .burger-lines i:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+.nav-panel{
+  position:absolute;
+  left:0;right:0;top:100%;
+  display:grid;
+  padding:2px var(--gutter) 10px;
+  background:var(--paper);
+  border-top:1px solid var(--rule-soft);
+  border-bottom:1px solid var(--rule);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-10px);
+  transition:opacity .4s var(--ease-expo),
+             transform .55s var(--ease-expo),
+             visibility .4s var(--ease-expo);
+}
+.nav.is-open .nav-panel{opacity:1;visibility:visible;transform:none}
+.nav-panel a{
+  padding:14px 0;
+  font-size:1rem;
+  font-weight:500;
+  color:var(--ink-70);
+  border-bottom:1px solid var(--rule-soft);
+  transition:color .4s var(--ease-expo);
+}
+.nav-panel a:last-child{border-bottom:0}
+.nav-panel a:hover,.nav-panel a.is-active{color:var(--brass)}
+
+@media (max-width:759px){
+  .nav-links{display:none}
+  .nav-burger{display:inline-flex}
+}
+@media (min-width:760px){.nav-panel{display:none}}
+
 /* Language switch */
 .lang{
   display:flex;
@@ -423,7 +480,7 @@ html[data-theme="dark"] .theme-btn .icon-sun{display:block}
   .about-grid{grid-template-columns:minmax(0,.74fr) minmax(0,1.26fr)}
 }
 
-.portrait{display:block;width:100%;max-width:360px;margin-inline:auto}
+.portrait{display:block;width:100%;max-width:288px;margin-inline:auto}
 .portrait-frame{
   position:relative;
   display:block;
@@ -800,6 +857,13 @@ html[data-theme="dark"] .theme-btn .icon-sun{display:block}
 .diagram-scroll{overflow-x:auto;overflow-y:hidden}
 .diagram{width:100%;height:auto;display:block}
 .diagram.wide{min-width:760px}
+/* On a phone, show the whole topology scaled to fit rather than a slice of it
+   behind a scrollbar. It becomes small — the reader pinch-zooms, which the
+   viewport meta allows — but the shape of the network is legible at a glance. */
+@media (max-width:759px){
+  .diagram.wide{min-width:0}
+  .diagram-scroll{overflow-x:visible}
+}
 
 .diagram .edge{
   stroke:rgba(251,251,249,.32);
@@ -851,6 +915,12 @@ html[data-theme="dark"] .theme-btn .icon-sun{display:block}
 .bcm-wrap{margin-top:clamp(24px,3vw,40px)}
 .bcm-scroll{overflow-x:auto;overflow-y:hidden}
 .bcm{min-width:760px;display:grid;gap:14px;grid-template-columns:minmax(0,2.05fr) minmax(0,1fr)}
+/* Same idea for the schematic: drop to one column so the sheet gets the full
+   width of the screen, with the photo, serial monitor and switches beneath it. */
+@media (max-width:759px){
+  .bcm{min-width:0;grid-template-columns:minmax(0,1fr)}
+  .bcm-scroll{overflow-x:visible}
+}
 .bcm-sheet{
   background:#FFFFFF;
   border:1px solid rgba(251,251,249,.18);
@@ -1120,6 +1190,7 @@ html.anim .shot{opacity:0}
 .cert-frame{
   position:relative;
   display:block;
+  max-width:272px;
   border:1px solid var(--rule);
   background:var(--mat);
   padding:clamp(7px,.8vw,11px);
@@ -1142,10 +1213,10 @@ html.anim .shot{opacity:0}
 .cert.is-missing img{display:none}
 .cert.is-missing .cert-missing{display:block}
 .cert h3{
-  margin-top:16px;
+  margin-top:14px;
   font-family:var(--display);
   font-weight:600;
-  font-size:1rem;
+  font-size:.94rem;
   line-height:1.28;
   letter-spacing:-.014em;
 }
@@ -1156,7 +1227,7 @@ html.anim .shot{opacity:0}
   text-transform:uppercase;
   color:var(--ink-38);
 }
-.cert p{margin-top:10px;font-size:.86rem;line-height:1.6;color:var(--ink-70)}
+.cert p{margin-top:9px;font-size:.83rem;line-height:1.6;color:var(--ink-70)}
 .cert-verify{
   display:inline-block;
   margin-top:11px;
@@ -1505,6 +1576,8 @@ html[data-theme="dark"] body::after{opacity:.07}
   .hero-scroll,
   .theme-btn,
   .lang,
+  .nav-burger,
+  .nav-panel,
   .contact-form,
   .form-foot,
   .form-status,
@@ -1595,8 +1668,22 @@ html[data-theme="dark"] body::after{opacity:.07}
           <path d="M12 2.6v2.1M12 19.3v2.1M21.4 12h-2.1M4.7 12H2.6M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5M18.6 18.6l-1.5-1.5M6.9 6.9 5.4 5.4" />
         </svg>
       </button>
+
+      <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="nav-panel">
+        <span class="sr-only" data-i18n="nav.menu">Menu</span>
+        <span class="burger-lines" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
     </div>
   </div>
+
+  <nav class="nav-panel" id="nav-panel" aria-label="Sections">
+    <a href="#about" data-i18n="nav.about">About</a>
+    <a href="#education" data-i18n="nav.education">Education</a>
+    <a href="#experience" data-i18n="nav.experience">Experience</a>
+    <a href="#projects" data-i18n="nav.work">Projects</a>
+    <a href="#certifications" data-i18n="cert.label">Certifications</a>
+    <a href="#contact" data-i18n="nav.contact">Contact</a>
+  </nav>
 </header>
 
 <main id="top">
@@ -2115,6 +2202,7 @@ window.I18N = {
 
     'nav.role': 'Engineering Portfolio',
     'nav.about': 'About',
+    'nav.menu': 'Menu',
     'nav.theme': 'Toggle dark mode',
     'nav.education': 'Education',
     'nav.experience': 'Experience',
@@ -2347,6 +2435,7 @@ window.I18N = {
 
     'nav.role': 'Portfólio de Engenharia',
     'nav.about': 'Sobre',
+    'nav.menu': 'Menu',
     'nav.theme': 'Alternar modo escuro',
     'nav.education': 'Formação',
     'nav.experience': 'Experiência',
@@ -2578,6 +2667,7 @@ window.I18N = {
 
     'nav.role': 'Portfolio di Ingegneria',
     'nav.about': 'Chi sono',
+    'nav.menu': 'Menu',
     'nav.theme': 'Attiva o disattiva la modalità scura',
     'nav.education': 'Formazione',
     'nav.experience': 'Esperienza',
@@ -3543,6 +3633,12 @@ var Carousel = (function () {
   var HOLD = 60000;
   var root, wrap, slides = [], cards = [], idx = 0, timer = null;
   var armed = false, paused = false, onScreen = true;
+  /* The topology draws when the reader actually reaches it. The panel is
+     tall — the description sits well above the figure — so watching the
+     section would fire while the diagram is still below the fold. This
+     watches the <svg> itself, and re-arms it on the way out so coming
+     back plays it again. */
+  var diagramWatch = null;
 
   function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
 
@@ -3691,14 +3787,33 @@ var Carousel = (function () {
   function playFigure(slide) {
     if (!slide) return;
     if (slide.querySelector('[data-bcm]')) {
+      unwatchDiagram();
       BCM.start();
       dealShots(slide);
       return;
     }
     BCM.stop();
-    var svg = slide.querySelector('.diagram');
-    if (svg) playDiagram(svg);
+    watchDiagram(slide.querySelector('.diagram'));
     dealShots(slide);
+  }
+
+  function unwatchDiagram() {
+    if (diagramWatch) { diagramWatch.disconnect(); diagramWatch = null; }
+  }
+
+  function watchDiagram(svg) {
+    unwatchDiagram();
+    if (!svg) return;
+    if (!('IntersectionObserver' in window)) { playDiagram(svg); return; }
+
+    armDiagram(svg);            // held undrawn until it is genuinely in view
+    diagramWatch = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) playDiagram(svg);
+        else armDiagram(svg);   // reset on the way out, so returning replays
+      });
+    }, { threshold: 0.32 });
+    diagramWatch.observe(svg);
   }
 
   function show(i, fromUser) {
@@ -3912,6 +4027,33 @@ var Carousel = (function () {
     });
   });
 
+  /* ---------- Mobile menu ----------
+     The inline links drop out below 760px; this panel carries the full set,
+     including Certifications, which the desktop bar has no room for. */
+  (function () {
+    var bar = document.querySelector('.nav');
+    var btn = document.querySelector('[data-nav-toggle]');
+    var panel = document.getElementById('nav-panel');
+    if (!bar || !btn || !panel) return;
+
+    function setOpen(open) {
+      bar.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    btn.addEventListener('click', function () {
+      setOpen(!bar.classList.contains('is-open'));
+    });
+    panel.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 760) setOpen(false);
+    });
+  })();
+
   /* ---------- Light / dark ----------
      The head script already resolved the opening theme. This only handles
      the button and, for readers who have never pressed it, keeps the page
@@ -4016,9 +4158,9 @@ var Carousel = (function () {
   });
 
   /* ---------- Active section tracking ---------- */
-  var ids = ['top', 'about', 'education', 'experience', 'projects', 'contact'];
+  var ids = ['top', 'about', 'education', 'experience', 'projects', 'certifications', 'contact'];
   var setActive = function (id) {
-    document.querySelectorAll('.nav-links a').forEach(function (a) {
+    document.querySelectorAll('.nav-links a, .nav-panel a').forEach(function (a) {
       a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
     });
   };

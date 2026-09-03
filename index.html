@@ -2,9 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FBFBF9">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gustavo Gasperin — Engineering Portfolio</title>
 <meta name="description" data-i18n-meta="meta.desc" content="Gustavo Gasperin — Technology Administration Graduate Assistant and M.E.T. candidate at Kent State University. Enterprise IT, networking, and embedded systems." />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Gustavo Gasperin",
+  "url": "https://gustavo-gasperin.github.io",
+  "image": "https://gustavo-gasperin.github.io/images/headshot.jpg",
+  "email": "mailto:contact.gasperin@gmail.com",
+  "jobTitle": "Technology Administration Graduate Assistant",
+  "worksFor": {
+    "@type": "CollegeOrUniversity",
+    "name": "Kent State University",
+    "department": { "@type": "Organization", "name": "College of Sciences and Humanities, Office of Technology" }
+  },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "Kent State University" },
+    { "@type": "CollegeOrUniversity", "name": "Pontifícia Universidade Católica do Paraná" }
+  ],
+  "knowsLanguage": ["en", "pt-BR"],
+  "knowsAbout": ["Engineering Technology", "Computer Engineering Technology", "Enterprise IT", "Networking", "Embedded Systems"],
+  "address": { "@type": "PostalAddress", "addressLocality": "Kent", "addressRegion": "OH", "addressCountry": "US" },
+  "sameAs": [
+    "https://www.linkedin.com/in/gustavogasperin",
+    "https://github.com/gustavo-gasperin"
+  ]
+}
+</script>
 
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
@@ -21,7 +51,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- Libraries load in <head> so the hidden state applies before first paint.
      If any CDN fails, .anim is never added and the page renders fully visible. -->
@@ -33,6 +63,16 @@
     var hasGsap = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (hasGsap && !reduced) document.documentElement.classList.add('anim');
+
+    /* Theme, resolved before the first paint so the page never flashes.
+       A stored choice wins; otherwise follow the operating system;
+       otherwise light. */
+    var t = null;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (t !== 'light' && t !== 'dark') {
+      t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
   })();
 </script>
 
@@ -58,13 +98,47 @@
   --losses-lift:#E1806F;
   --brass-lift:#C9A867;
 
-  --display:"Fraunces",Georgia,serif;
-  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* Surfaces that are NOT simply "page colour":
+     --panel  the projects panel, dark in both themes
+     --mat    the white card stock behind photographs
+     --fade-* the nav's scrim, which has to match the page exactly */
+  --panel:#14171A;
+  --panel-ink:#FBFBF9;
+  --mat:#FFFFFF;
+  --fade-hi:rgba(251,251,249,.94);
+  --fade-lo:rgba(251,251,249,0);
+
+  --display:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 
   --gutter:clamp(20px,5vw,88px);
   --maxw:1320px;
   --ease-expo:cubic-bezier(.16,1,.3,1);
+}
+
+/* ---- Dark theme -------------------------------------------------------
+   Set on <html data-theme="dark"> by the head script, so the page is
+   already the right colour before first paint. Light is the default;
+   dark is used when the operating system asks for it or the reader
+   presses the toggle. Only the tokens change — no rule is duplicated. */
+html[data-theme="dark"]{
+  --paper:#0F1214;
+  --ink:#EAEAE5;
+  --brass:#C9A867;
+  --gains:#5FB894;
+  --losses:#E1806F;
+
+  --ink-70:rgba(234,234,229,.72);
+  --ink-52:rgba(234,234,229,.54);
+  --ink-38:rgba(234,234,229,.40);
+  --rule:rgba(234,234,229,.17);
+  --rule-soft:rgba(234,234,229,.10);
+
+  --panel:#191D20;
+  --mat:#1A1E22;
+  --fade-hi:rgba(15,18,20,.94);
+  --fade-lo:rgba(15,18,20,0);
 }
 
 /* ============================================================
@@ -76,6 +150,7 @@ body{
   margin:0;
   background:var(--paper);
   color:var(--ink);
+  transition:background-color .45s var(--ease-expo),color .45s var(--ease-expo);
   font-family:var(--body);
   font-size:clamp(15px,.42vw + 13.6px,17px);
   line-height:1.62;
@@ -91,6 +166,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
 ::selection{background:var(--brass);color:var(--paper)}
 :focus-visible{outline:2px solid var(--brass);outline-offset:4px;border-radius:1px}
+/* Cards clip their own overflow, so an outset ring would be cut off. */
+.card:focus-visible{outline-offset:-3px}
 
 /* Lenis */
 html.lenis,html.lenis body{height:auto}
@@ -148,11 +225,10 @@ section{position:relative}
 
 .sec-title{
   font-family:var(--display);
-  font-weight:400;
-  font-variation-settings:"opsz" 120;
-  font-size:clamp(2.1rem,4.6vw,3.6rem);
-  line-height:1.02;
-  letter-spacing:-.03em;
+  font-weight:600;
+  font-size:clamp(2rem,4.3vw,3.3rem);
+  line-height:1.08;
+  letter-spacing:-.022em;
   max-width:17ch;
 }
 
@@ -164,7 +240,7 @@ section{position:relative}
   inset:0 0 auto 0;
   z-index:60;
   padding-block:18px;
-  background:linear-gradient(to bottom,rgba(251,251,249,.94) 55%,rgba(251,251,249,0));
+  background:linear-gradient(to bottom,var(--fade-hi) 55%,var(--fade-lo));
   backdrop-filter:blur(6px);
   -webkit-backdrop-filter:blur(6px);
 }
@@ -172,7 +248,6 @@ section{position:relative}
 .mark{display:inline-flex;align-items:baseline;gap:11px;white-space:nowrap}
 .mark-name{
   font-family:var(--display);
-  font-variation-settings:"opsz" 40;
   font-weight:600;
   font-size:clamp(1rem,1.5vw,1.14rem);
   letter-spacing:-.018em;
@@ -216,7 +291,7 @@ section{position:relative}
 .lang{
   display:flex;
   align-items:center;
-  gap:7px;
+  gap:6px;
   font-family:var(--mono);
   font-size:.66rem;
   letter-spacing:.12em;
@@ -256,10 +331,9 @@ section{position:relative}
 h1.hero-title{
   font-family:var(--display);
   font-weight:700;
-  font-variation-settings:"opsz" 144;
-  font-size:clamp(2.05rem,6.6vw,5.9rem);
-  line-height:1;
-  letter-spacing:-.034em;
+  font-size:clamp(1.62rem,5.4vw,4.8rem);
+  line-height:1.06;
+  letter-spacing:-.026em;
   max-width:20ch;
 }
 .line{display:block;overflow:hidden;padding-bottom:.06em}
@@ -305,6 +379,35 @@ h1.hero-title{
   100%{transform:translateX(100%)}
 }
 
+.sr-only{
+  position:absolute;width:1px;height:1px;
+  padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+/* Light/dark toggle — shows the theme it will switch TO. */
+.theme-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;height:28px;
+  margin-left:-4px;   /* nav-right's gap already spaces it from the language pair */
+  color:var(--ink-38);
+  transition:color .45s var(--ease-expo);
+}
+.theme-btn:hover{color:var(--brass)}
+.theme-btn svg{
+  width:15px;height:15px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.theme-btn .icon-sun{display:none}
+html[data-theme="dark"] .theme-btn .icon-moon{display:none}
+html[data-theme="dark"] .theme-btn .icon-sun{display:block}
+
 /* ============================================================
    6. ABOUT — portrait plate + text
    Same plate treatment as the diploma figures, so the two
@@ -325,7 +428,7 @@ h1.hero-title{
   position:relative;
   display:block;
   border:1px solid var(--rule);
-  background:#fff;
+  background:var(--mat);
   padding:clamp(9px,1vw,14px);
   overflow:hidden;
   transition:border-color .6s var(--ease-expo);
@@ -333,6 +436,9 @@ h1.hero-title{
 .portrait:hover .portrait-frame{border-color:var(--brass)}
 .portrait img{
   width:100%;
+  height:auto;               /* must be declared, or the height attribute
+                                on the tag applies literally and the ratio
+                                below is ignored */
   aspect-ratio:4/5;          /* crops the empty backdrop off the bottom */
   object-fit:cover;
   object-position:50% 14%;
@@ -383,8 +489,7 @@ h1.hero-title{
 .sec-head--titled{flex-wrap:wrap;row-gap:6px}
 .sec-aside{
   font-family:var(--display);
-  font-weight:400;
-  font-variation-settings:"opsz" 40;
+  font-weight:600;
   font-size:clamp(1rem,1.7vw,1.45rem);
   line-height:1.15;
   letter-spacing:-.018em;
@@ -431,9 +536,11 @@ h1.hero-title{
 }
 .edu-row:hover::after{width:100%}
 @media (min-width:900px){
+  /* Text left, diploma right, every row. Source order is left alone so the
+     stacking order on phones stays exactly as it was. */
   .edu-row{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .edu-row.flip .edu-info{order:2}
-  .edu-row.flip .edu-media{order:1}
+  .edu-info{order:1}
+  .edu-media{order:2}
 }
 @media (max-width:899px){
   .edu-media.is-empty{display:none}
@@ -451,11 +558,10 @@ h1.hero-title{
 .edu-row.is-now .edu-when{color:var(--brass)}
 .edu-info h3{
   font-family:var(--display);
-  font-variation-settings:"opsz" 72;
-  font-weight:400;
+  font-weight:600;
   font-size:clamp(1.32rem,2.4vw,1.85rem);
-  letter-spacing:-.022em;
-  line-height:1.14;
+  letter-spacing:-.016em;
+  line-height:1.2;
 }
 .edu-info h3 .sub{color:var(--ink-38)}
 .edu-where{font-size:.92rem;color:var(--ink-52);margin-top:6px}
@@ -466,7 +572,7 @@ h1.hero-title{
   position:relative;
   display:block;
   border:1px solid var(--rule);
-  background:#fff;
+  background:var(--mat);
   padding:clamp(9px,1vw,14px);
   overflow:hidden;
   transition:border-color .6s var(--ease-expo);
@@ -514,11 +620,10 @@ h1.hero-title{
 }
 .role-head h3{
   font-family:var(--display);
-  font-variation-settings:"opsz" 72;
-  font-weight:400;
+  font-weight:600;
   font-size:clamp(1.5rem,3vw,2.05rem);
-  letter-spacing:-.024em;
-  line-height:1.1;
+  letter-spacing:-.018em;
+  line-height:1.14;
 }
 .role-head .org{font-size:.94rem;color:var(--ink-52)}
 
@@ -544,8 +649,39 @@ h1.hero-title{
 .rung.current .span{color:var(--brass)}
 
 .duties{margin-top:34px;display:grid;gap:clamp(22px,3vw,40px);grid-template-columns:1fr}
-@media (min-width:760px){.duties{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1000px){.duties{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* The three groups share row heights, so the rule under each heading and the
+   first bullet beneath it land on the same line — even when a heading wraps
+   to two lines in one language and one in another. */
+@supports (grid-template-rows: subgrid){
+  .duties{grid-template-rows:repeat(2,auto)}
+  .duty{
+    display:grid;
+    grid-template-rows:subgrid;
+    grid-row:span 2;
+    row-gap:0;
+    align-content:start;
+  }
+}
 .duty p + p{margin-top:12px}
+.duty ul{list-style:none;display:grid;gap:12px}
+.duty li{
+  position:relative;
+  padding-left:15px;
+  font-size:.9rem;
+  line-height:1.6;
+  color:var(--ink-70);
+}
+.duty li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.72em;
+  width:7px;
+  height:1px;
+  background:var(--brass);
+}
+.duty li b{font-weight:600;color:var(--ink)}
 .duty h4{
   font-family:var(--mono);
   font-size:.66rem;
@@ -561,18 +697,21 @@ h1.hero-title{
 .up{color:var(--gains);font-family:var(--mono);font-size:.9em}
 .down{color:var(--losses);font-family:var(--mono);font-size:.9em}
 
-.stack{margin-top:38px;display:flex;flex-wrap:wrap;gap:8px;padding-top:22px;border-top:1px solid var(--rule)}
+.stack{margin-top:38px;display:flex;flex-wrap:wrap;gap:7px .85em;padding-top:22px;border-top:1px solid var(--rule)}
+/* Read as a list of terms, not a row of controls: no border, no box,
+   no hover state — nothing that suggests they can be clicked. */
 .chip{
   font-family:var(--mono);
   font-size:.64rem;
   letter-spacing:.1em;
   text-transform:uppercase;
-  color:var(--ink-70);
-  border:1px solid var(--rule);
-  padding:6px 11px;
-  transition:border-color .5s var(--ease-expo),color .5s var(--ease-expo);
+  color:var(--ink-52);
 }
-.chip:hover{border-color:var(--brass);color:var(--ink)}
+.chip:not(:last-child)::after{
+  content:"·";
+  margin-left:.85em;
+  color:var(--ink-38);
+}
 
 /* ============================================================
    11. PROJECT CAROUSEL — the dark element
@@ -581,8 +720,8 @@ h1.hero-title{
 
 .feature{
   position:relative;
-  background:var(--ink);
-  color:var(--paper);
+  background:var(--panel);
+  color:var(--panel-ink);
   padding:clamp(26px,3.6vw,54px);
   overflow:hidden;
 }
@@ -618,11 +757,10 @@ h1.hero-title{
 .slide-head{margin-bottom:clamp(20px,2.6vw,32px)}
 .slide-head h3{
   font-family:var(--display);
-  font-variation-settings:"opsz" 120;
-  font-weight:400;
+  font-weight:600;
   font-size:clamp(1.72rem,3.2vw,2.7rem);
-  line-height:1.04;
-  letter-spacing:-.028em;
+  line-height:1.1;
+  letter-spacing:-.021em;
   margin-top:14px;
   max-width:20ch;
 }
@@ -648,8 +786,8 @@ h1.hero-title{
 .dl-row .k{color:rgba(251,251,249,.4);white-space:nowrap}
 .dl-row .v{color:rgba(251,251,249,.82);text-align:right}
 
-.feature .chip{border-color:rgba(251,251,249,.2);color:rgba(251,251,249,.72)}
-.feature .chip:hover{border-color:var(--brass-lift);color:var(--paper)}
+.feature .chip{color:rgba(251,251,249,.62)}
+.feature .chip:not(:last-child)::after{color:rgba(251,251,249,.34)}
 .feature .stack{margin-top:26px;padding-top:20px;border-top-color:rgba(251,251,249,.16)}
 
 /* ---- diagram ---- */
@@ -680,7 +818,7 @@ h1.hero-title{
   stroke-linejoin:round;
   transition:stroke .45s var(--ease-expo);
 }
-.diagram .glyph-bg{fill:var(--ink);stroke:none}
+.diagram .glyph-bg{fill:var(--panel);stroke:none}
 .diagram .lbl{
   font-family:var(--mono);
   font-size:11px;
@@ -690,7 +828,7 @@ h1.hero-title{
 }
 .diagram .lbl.sub{fill:rgba(251,251,249,.46);font-size:10px}
 .diagram .lbl.inside{fill:rgba(251,251,249,.86);font-size:11.5px}
-.diagram .note-bg{fill:var(--ink)}
+.diagram .note-bg{fill:var(--panel)}
 .diagram .note{
   font-family:var(--mono);
   font-size:10px;
@@ -800,9 +938,9 @@ h1.hero-title{
   user-select:none;
   transition:border-color .3s var(--ease-expo),color .3s var(--ease-expo),background .3s var(--ease-expo);
 }
-.sw:hover{border-color:rgba(251,251,249,.45);color:var(--paper)}
+.sw:hover{border-color:rgba(251,251,249,.45);color:var(--panel-ink)}
 .sw .sw-p{color:rgba(251,251,249,.3);font-size:.9em}
-.sw.is-on{border-color:var(--brass-lift);color:var(--paper);background:rgba(201,168,103,.14)}
+.sw.is-on{border-color:var(--brass-lift);color:var(--panel-ink);background:rgba(201,168,103,.14)}
 .sw.is-on .sw-p{color:var(--brass-lift)}
 .ctl-slider{
   display:inline-flex;
@@ -815,7 +953,7 @@ h1.hero-title{
   color:rgba(251,251,249,.44);
 }
 .ctl-slider input{width:120px;accent-color:var(--brass-lift)}
-.ctl-slider b{color:var(--paper);font-weight:400;min-width:3ch}
+.ctl-slider b{color:var(--panel-ink);font-weight:400;min-width:3ch}
 
 @media (max-width:900px){
   .bcm{grid-template-columns:minmax(0,1fr)}
@@ -909,8 +1047,23 @@ html.anim .shot{opacity:0}
   min-height:250px;
   transition:background .6s var(--ease-expo),box-shadow .6s var(--ease-expo);
 }
-.card:hover{background:#fff;box-shadow:0 0 0 1px var(--ink-38)}
-.card.is-active{background:#fff;box-shadow:0 0 0 1px var(--brass)}
+/* The four cards share one set of row heights, so the eyebrow, the title,
+   the body copy and the tech line each start on the same baseline across
+   all four — in every language, however many lines the eyebrow wraps to.
+   Any slack falls to the bottom of the shorter cards. */
+@supports (grid-template-rows: subgrid){
+  .grid4{grid-template-rows:repeat(4,auto)}
+  .card{
+    display:grid;
+    grid-template-rows:subgrid;
+    grid-row:span 4;
+    row-gap:0;          /* the 1px grid gap is for the card separators only */
+  }
+  .card-top{margin-bottom:0}
+}
+
+.card:hover{background:var(--mat);box-shadow:0 0 0 1px var(--ink-38)}
+.card.is-active{background:var(--mat);box-shadow:0 0 0 1px var(--brass)}
 .card-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:auto}
 .card .idx{
   font-family:var(--mono);
@@ -932,8 +1085,7 @@ html.anim .shot{opacity:0}
 .card.is-active .now{opacity:1}
 .card h3{
   font-family:var(--display);
-  font-variation-settings:"opsz" 48;
-  font-weight:400;
+  font-weight:600;
   font-size:1.24rem;
   line-height:1.16;
   letter-spacing:-.02em;
@@ -951,6 +1103,70 @@ html.anim .shot{opacity:0}
   color:var(--ink-52);
   line-height:1.9;
 }
+
+/* ============================================================
+   12b. CERTIFICATIONS — small plates, three across
+   ============================================================ */
+.certs{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:clamp(26px,3.4vw,44px);
+}
+@media (min-width:820px){.certs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@supports (grid-template-rows: subgrid){
+  .certs{grid-template-rows:repeat(5,auto)}
+  .cert{display:grid;grid-template-rows:subgrid;grid-row:span 5;row-gap:0;align-content:start}
+}
+.cert-frame{
+  position:relative;
+  display:block;
+  border:1px solid var(--rule);
+  background:var(--mat);
+  padding:clamp(7px,.8vw,11px);
+  overflow:hidden;
+  transition:border-color .6s var(--ease-expo);
+}
+.cert-frame:hover{border-color:var(--brass)}
+.cert img{width:100%;height:auto;display:block}
+.cert-missing{
+  display:none;
+  padding:42px 12px;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:.56rem;
+  letter-spacing:.1em;
+  color:var(--ink-38);
+  border:1px dashed var(--rule);
+  word-break:break-all;
+}
+.cert.is-missing img{display:none}
+.cert.is-missing .cert-missing{display:block}
+.cert h3{
+  margin-top:16px;
+  font-family:var(--display);
+  font-weight:600;
+  font-size:1rem;
+  line-height:1.28;
+  letter-spacing:-.014em;
+}
+.cert-meta{
+  margin-top:7px;
+  font-size:.58rem;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--ink-38);
+}
+.cert p{margin-top:10px;font-size:.86rem;line-height:1.6;color:var(--ink-70)}
+.cert-verify{
+  display:inline-block;
+  margin-top:11px;
+  font-size:.58rem;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--ink-52);
+  transition:color .45s var(--ease-expo);
+}
+.cert-verify:hover{color:var(--brass)}
 
 /* ============================================================
    13. CONTACT
@@ -999,7 +1215,7 @@ html.anim .shot{opacity:0}
 .meta-row a{transition:color .45s var(--ease-expo)}
 .meta-row a:hover{color:var(--brass)}
 
-/* LinkedIn mark — the whole row target, icon included */
+/* Profile marks (LinkedIn, GitHub) — the whole row is the target, icon included */
 .meta-row a.li{display:inline-flex;align-items:center;gap:9px}
 .li-mark{flex:none}
 .li-mark rect{fill:none;stroke:var(--ink-52);stroke-width:1.6;transition:stroke .45s var(--ease-expo)}
@@ -1030,11 +1246,10 @@ html.anim .shot{opacity:0}
 .form-intro{margin-bottom:clamp(24px,3vh,34px)}
 .form-intro h3{
   font-family:var(--display);
-  font-variation-settings:"opsz" 90;
-  font-weight:400;
+  font-weight:600;
   font-size:clamp(1.5rem,2.8vw,2.1rem);
-  line-height:1.08;
-  letter-spacing:-.026em;
+  line-height:1.12;
+  letter-spacing:-.02em;
   max-width:14ch;
 }
 .form-intro p{font-size:.94rem;color:var(--ink-70);margin-top:12px;max-width:46ch}
@@ -1073,6 +1288,8 @@ html.anim .shot{opacity:0}
 .fld textarea{resize:vertical;min-height:118px;line-height:1.55}
 .fld input:hover,.fld textarea:hover{border-color:var(--ink-38)}
 .fld input:focus,.fld textarea:focus{outline:none;border-color:var(--brass)}
+/* ...but keyboard users still need the ring, so put it back for them only. */
+.fld input:focus-visible,.fld textarea:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
 .fld input::placeholder,.fld textarea::placeholder{color:var(--ink-38)}
 .fld.has-error input,.fld.has-error textarea{border-color:var(--losses)}
 .fld-msg{
@@ -1104,27 +1321,38 @@ html.anim .shot{opacity:0}
   gap:18px 24px;
   margin-top:4px;
 }
+/* A quiet pill that fills in on hover. Kept deliberately small — it is the
+   only bordered control left on the page, so it doesn't need weight to read
+   as the one thing here you press. */
 .btn{
   display:inline-flex;
   align-items:center;
-  gap:12px;
-  background:#000;
-  color:var(--paper);
+  gap:9px;
+  background:transparent;
+  color:var(--ink);
   font-family:var(--body);
-  font-size:.86rem;
+  font-size:.8rem;
   font-weight:500;
-  letter-spacing:.01em;
-  padding:15px 28px;
-  border:0;
-  border-radius:0;
+  letter-spacing:.005em;
+  padding:10px 20px;
+  border:1px solid var(--rule);
+  border-radius:999px;
   cursor:pointer;
   will-change:transform;
-  transition:opacity .4s var(--ease-expo);
+  transition:background-color .45s var(--ease-expo),
+             border-color .45s var(--ease-expo),
+             color .45s var(--ease-expo),
+             opacity .4s var(--ease-expo);
+}
+.btn:not([disabled]):hover{
+  background:var(--ink);
+  border-color:var(--ink);
+  color:var(--paper);
 }
 .btn[disabled]{opacity:.42;cursor:not-allowed}
-.btn .arrow{display:inline-block;transition:transform .6s var(--ease-expo)}
-.btn:not([disabled]):hover .arrow{transform:translate(3px,-3px)}
-.btn-inner{display:inline-flex;align-items:center;gap:12px;will-change:transform}
+/* Standing clear of the contact rows so it reads as an action, not a value. */
+.resume-btn{margin-top:clamp(26px,4vh,40px);text-decoration:none}
+.btn-inner{display:inline-flex;align-items:center;gap:9px;will-change:transform}
 
 .form-status{
   grid-column:1 / -1;
@@ -1217,8 +1445,118 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
   animation-delay:.46s;
 }
 
+/* Paper grain. A single fixed overlay, non-interactive, blended so it reads
+   as texture in both themes rather than a grey wash. */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:80;
+  pointer-events:none;
+  opacity:.05;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:140px 140px;
+}
+html[data-theme="dark"] body::after{opacity:.07}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
+}
+
+/* ============================================================
+   16. PRINT — someone will save this as a PDF
+   The screen version hides most of itself behind scroll reveals and
+   shows one project at a time. On paper, everything has to be visible
+   at once, in one theme, without burning a cartridge on the dark panel.
+   ============================================================ */
+@media print{
+  /* Undo every pre-animation state; nothing on paper should be mid-reveal. */
+  *,*::before,*::after{
+    animation:none !important;
+    transition:none !important;
+    opacity:1 !important;
+    transform:none !important;
+    filter:none !important;
+    box-shadow:none !important;
+  }
+
+  /* Force the light palette, whichever theme the reader was using. */
+  :root,html[data-theme="dark"]{
+    --paper:#fff;
+    --ink:#111;
+    --ink-70:#333;
+    --ink-52:#555;
+    --ink-38:#777;
+    --rule:#bbb;
+    --rule-soft:#ddd;
+    --brass:#7A5F28;
+    --gains:#1C6B4F;
+    --losses:#B03A2B;
+    --panel:#fff;
+    --panel-ink:#111;
+    --mat:#fff;
+  }
+  html,body{background:#fff !important;color:#111 !important}
+  body::after{display:none !important}
+
+  /* Controls, navigation, and anything that only makes sense on screen. */
+  .nav,
+  .hero-scroll,
+  .theme-btn,
+  .lang,
+  .contact-form,
+  .form-foot,
+  .form-status,
+  .grid4,
+  .feature-progress,
+  .bcm-ctl,
+  .dl-note,
+  .diagram-hint{display:none !important}
+
+  /* All four projects, stacked, instead of one slide at a time. */
+  .slides{height:auto !important}
+  .slide{
+    position:static !important;
+    visibility:visible !important;
+    pointer-events:auto !important;
+    page-break-before:always;
+  }
+  .slide:first-child{page-break-before:auto}
+  .feature{
+    background:#fff !important;
+    color:#111 !important;
+    border:1px solid #ccc;
+    padding:18px !important;
+  }
+  .feature .mono{color:#555 !important}
+
+  /* The topology is drawn in paper-on-ink; invert it for paper-on-paper. */
+  .diagram .edge{stroke:#888 !important}
+  .diagram .edge.remote{stroke:#B03A2B !important}
+  .diagram .glyph{stroke:#222 !important}
+  .diagram .glyph-bg,.diagram .note-bg{fill:#fff !important}
+  .diagram .lbl,.diagram .lbl.sub,.diagram .lbl.inside,.diagram .note{fill:#333 !important}
+  .diagram-scroll{overflow:visible !important}
+
+  /* Keep related things on one sheet. */
+  .edu-row,.duty,.dl-row,.shot,figure,.honors{page-break-inside:avoid}
+  h1,h2,h3,h4{page-break-after:avoid}
+  .band{padding:22px 0 !important;min-height:0 !important}
+  .hero{min-height:0 !important;padding:0 0 24px !important}
+  img{max-width:100% !important}
+
+  /* Links lose their destination on paper, so print it. */
+  .meta-row a[href^="http"]::after,
+  .diploma[href]::after{
+    content:" (" attr(href) ")";
+    font-family:var(--mono);
+    font-size:.62rem;
+    color:#666;
+    word-break:break-all;
+  }
+
+  @page{margin:16mm}
 }
 </style>
 </head>
@@ -1239,11 +1577,24 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
         <a href="#contact" class="nav-hide" data-i18n="nav.contact">Contact</a>
       </nav>
 
-      <div class="lang" role="group" aria-label="Language / Idioma">
+      <div class="lang" role="group" aria-label="Language / Idioma / Lingua">
         <button type="button" data-lang="en" class="is-on" lang="en" aria-pressed="true">EN</button>
         <span class="sep" aria-hidden="true">/</span>
         <button type="button" data-lang="pt" lang="pt-BR" aria-pressed="false">PT</button>
+        <span class="sep" aria-hidden="true">/</span>
+        <button type="button" data-lang="it" lang="it-IT" aria-pressed="false">IT</button>
       </div>
+
+      <button type="button" class="theme-btn" data-theme-toggle aria-pressed="false">
+        <span class="sr-only" data-i18n="nav.theme">Dark mode</span>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z" />
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.1" />
+          <path d="M12 2.6v2.1M12 19.3v2.1M21.4 12h-2.1M4.7 12H2.6M18.6 5.4l-1.5 1.5M6.9 17.1l-1.5 1.5M18.6 18.6l-1.5-1.5M6.9 6.9 5.4 5.4" />
+        </svg>
+      </button>
     </div>
   </div>
 </header>
@@ -1286,7 +1637,7 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
         <div class="about-media">
           <figure class="portrait" data-portrait>
             <span class="portrait-frame">
-              <img src="images/headshot.jpg"
+              <img src="images/headshot.jpg" width="1986" height="2780"
                    alt="Gustavo Gasperin — professional headshot"
                    data-i18n-alt="about.alt" loading="lazy" />
               <span class="portrait-missing">images/headshot.jpg</span>
@@ -1346,7 +1697,7 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
         </article>
 
         <!-- 02 — info right / media left -->
-        <article class="edu-row flip">
+        <article class="edu-row">
           <div class="edu-info" data-reveal>
             <span class="edu-when" data-i18n="edu.d2">Feb 2021 — Dec 2025</span>
             <h3 data-i18n-html="edu.t2">B.S., Computer Engineering Technology <span class="sub">· Minor in Business</span></h3>
@@ -1363,7 +1714,7 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
           <div class="edu-media">
             <a class="diploma" data-diploma href="images/diploma-ksu-bachelor.jpg" target="_blank" rel="noopener">
               <span class="diploma-frame">
-                <img src="images/diploma-ksu-bachelor.jpg" alt="Kent State University diploma — Bachelor of Science in Computer Engineering Technology, Summa Cum Laude" data-i18n-alt="edu.dip2.alt" loading="lazy" />
+                <img src="images/diploma-ksu-bachelor.jpg" width="810" height="630" alt="Kent State University diploma — Bachelor of Science in Computer Engineering Technology, Summa Cum Laude" data-i18n-alt="edu.dip2.alt" loading="lazy" />
                 <span class="diploma-missing">images/diploma-ksu-bachelor.jpg</span>
               </span>
               <span class="diploma-cap">
@@ -1385,7 +1736,7 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
           <div class="edu-media">
             <a class="diploma" data-diploma href="images/diploma-pucpr.jpg" target="_blank" rel="noopener">
               <span class="diploma-frame">
-                <img src="images/diploma-pucpr.jpg" alt="PUCPR diploma — Bacharel Interdisciplinar em Ciências e Humanidades" data-i18n-alt="edu.dip3.alt" loading="lazy" />
+                <img src="images/diploma-pucpr.jpg" width="2048" height="1384" alt="PUCPR diploma — Bacharel Interdisciplinar em Ciências e Humanidades" data-i18n-alt="edu.dip3.alt" loading="lazy" />
                 <span class="diploma-missing">images/diploma-pucpr.jpg</span>
               </span>
               <span class="diploma-cap">
@@ -1397,7 +1748,7 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
         </article>
 
         <!-- 04 — info right / media left -->
-        <article class="edu-row flip">
+        <article class="edu-row">
           <div class="edu-info" data-reveal>
             <span class="edu-when" data-i18n="edu.d4">Feb 2021 — Dec 2022</span>
             <h3 data-i18n-html="edu.t4">Associate of Science</h3>
@@ -1407,7 +1758,7 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
           <div class="edu-media">
             <a class="diploma" data-diploma href="images/diploma-ksu-associate.jpeg" target="_blank" rel="noopener">
               <span class="diploma-frame">
-                <img src="images/diploma-ksu-associate.jpeg" alt="Kent State University diploma — Associate of Science" data-i18n-alt="edu.dip4.alt" loading="lazy" />
+                <img src="images/diploma-ksu-associate.jpeg" width="2499" height="1948" alt="Kent State University diploma — Associate of Science" data-i18n-alt="edu.dip4.alt" loading="lazy" />
                 <span class="diploma-missing">images/diploma-ksu-associate.jpeg</span>
               </span>
               <span class="diploma-cap">
@@ -1473,13 +1824,29 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
 
       <div class="duties" data-stagger>
         <div class="duty">
-          <h4 data-i18n="exp.d1h">Support &amp; triage</h4>
-          <p data-i18n="exp.d1p">Tier 1 and Tier 2 support for college faculty, staff, and students.</p>
+          <h4 data-i18n="exp.g1h">IT infrastructure &amp; systems administration</h4>
+          <ul>
+            <li data-i18n-html="exp.g1b1"><b>Systems administration.</b> Manage Active Directory, Microsoft Azure, and Jamf objects.</li>
+            <li data-i18n-html="exp.g1b2"><b>Endpoint management.</b> Execute imaging and provisioning across macOS, Windows, and Linux endpoints to ensure optimal system performance.</li>
+            <li data-i18n-html="exp.g1b3"><b>IT solutions development.</b> Partner with full-time staff to design and deploy custom IT solutions that resolve day-to-day university challenges and improve operational efficiency.</li>
+            <li data-i18n-html="exp.g1b4"><b>Hardware diagnostics and maintenance.</b> Run system diagnostics and perform hardware repairs, including component repurposing, to restore functionality. Triage and coordinate with authorized external service centers for advanced failures.</li>
+          </ul>
         </div>
         <div class="duty">
-          <h4 data-i18n="exp.d2h">Deployment &amp; administration</h4>
-          <p data-i18n="exp.d2p">Imaging, provisioning, and lifecycle management across macOS, Windows, and Linux endpoints.</p>
-          <p data-i18n="exp.d2p2">Active Directory objects and group policy, Microsoft Azure management, bench-level hardware repair, and project coordination across the office.</p>
+          <h4 data-i18n="exp.g2h">Technical support &amp; integration</h4>
+          <ul>
+            <li data-i18n-html="exp.g2b1"><b>Laboratory systems integration.</b> Deliver IT support for active science laboratories, resolving connectivity issues between computer systems and research instruments.</li>
+            <li data-i18n-html="exp.g2b2"><b>Tier 1 and Tier 2 resolution.</b> Provide technical support for college faculty, staff, and students, resolving hardware, software, and networking escalations.</li>
+            <li data-i18n-html="exp.g2b3"><b>Ticket and operations management.</b> Co-facilitate weekly ticket review meetings, monitor resolution progress, and coordinate directly with faculty and staff to ensure timely service delivery.</li>
+          </ul>
+        </div>
+        <div class="duty">
+          <h4 data-i18n="exp.g3h">Leadership, mentorship &amp; event operations</h4>
+          <ul>
+            <li data-i18n-html="exp.g3b1"><b>Talent acquisition.</b> Serve as an interview panelist and reviewer for student technician roles, collaborating with full-time staff to evaluate candidates and finalize hiring decisions.</li>
+            <li data-i18n-html="exp.g3b2"><b>Training and mentorship.</b> Onboard and mentor incoming student employees with hands-on training for IT workflows, departmental processes, and documentation standards.</li>
+            <li data-i18n-html="exp.g3b3"><b>Live event production.</b> Deliver on-site technical and audiovisual support for university events, managing microphone setups and serving as the primary IT resource on site.</li>
+          </ul>
         </div>
       </div>
 
@@ -1558,6 +1925,58 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
     </div>
   </section>
 
+  <!-- ===================== CERTIFICATIONS ===================== -->
+  <section class="band band--tight" id="certifications">
+    <div class="shell">
+      <div class="sec-head" data-reveal>
+        <span class="mono" data-i18n="cert.label">Certifications</span>
+      </div>
+
+      <div class="certs" data-stagger>
+
+        <div class="cert">
+          <a class="cert-frame" href="images/react_native_cert.png" target="_blank" rel="noopener">
+            <img src="images/react_native_cert.png" width="800" height="613"
+                 alt="React Native course certificate — Meta, via Coursera"
+                 data-i18n-alt="cert.a1" loading="lazy" decoding="async" />
+            <span class="cert-missing">images/react_native_cert.png</span>
+          </a>
+          <h3 data-i18n="cert.t1">React Native</h3>
+          <div class="cert-meta mono" data-i18n="cert.m1">Meta · Coursera · June 2023</div>
+          <p data-i18n="cert.b1">A Meta course program on building cross-platform mobile applications with React Native.</p>
+          <a class="cert-verify mono" href="https://coursera.org/verify/GFP3FNBRKHDP" target="_blank" rel="noopener" data-i18n="cert.verify">Verify ↗</a>
+        </div>
+
+        <div class="cert">
+          <a class="cert-frame" href="images/programming_foundations_javascript_html_css.png" target="_blank" rel="noopener">
+            <img src="images/programming_foundations_javascript_html_css.png" width="901" height="695"
+                 alt="Programming Foundations with JavaScript, HTML and CSS certificate — Duke University, via Coursera"
+                 data-i18n-alt="cert.a2" loading="lazy" decoding="async" />
+            <span class="cert-missing">images/programming_foundations_javascript_html_css.png</span>
+          </a>
+          <h3 data-i18n="cert.t2">Programming Foundations with JavaScript, HTML and CSS</h3>
+          <div class="cert-meta mono" data-i18n="cert.m2">Duke University · Coursera · May 2023 · With honors</div>
+          <p data-i18n="cert.b2">Programming fundamentals and building web pages with JavaScript, HTML, and CSS.</p>
+          <a class="cert-verify mono" href="https://coursera.org/verify/REJJZ9ZDF6D5" target="_blank" rel="noopener" data-i18n="cert.verify">Verify ↗</a>
+        </div>
+
+        <div class="cert">
+          <a class="cert-frame" href="images/marketing_cert.jpg" target="_blank" rel="noopener">
+            <img src="images/marketing_cert.jpg" width="942" height="719"
+                 alt="Social Media Marketing Certification — Hootsuite Academy"
+                 data-i18n-alt="cert.a3" loading="lazy" decoding="async" />
+            <span class="cert-missing">images/marketing_cert.jpg</span>
+          </a>
+          <h3 data-i18n="cert.t3">Social Media Marketing Certification</h3>
+          <div class="cert-meta mono" data-i18n="cert.m3">Hootsuite Academy · May 2022 · ID 50928701</div>
+          <p data-i18n="cert.b3">Social media strategy, community building, content marketing, and social media advertising.</p>
+          <a class="cert-verify mono" href="https://www.credential.net/1e49abf6-a020-4690-a185-67bdfbea16c6#acc.dC1FkrU4" target="_blank" rel="noopener" data-i18n="cert.verify">Verify ↗</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== CONTACT ===================== -->
   <section class="contact band--tight" id="contact">
     <div class="shell">
@@ -1570,7 +1989,6 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
         <div class="contact-form-col">
           <div class="form-intro" data-reveal>
             <h3 data-i18n="form.title">Send me a message.</h3>
-            <p data-i18n="form.lede">Goes straight to my inbox. I read everything and reply to anything that isn't a sales pitch.</p>
           </div>
 
           <!-- Works without JavaScript: the form posts natively to the same endpoint. -->
@@ -1625,8 +2043,7 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
 
             <div class="form-foot">
               <button type="submit" class="btn" data-submit>
-                <span class="btn-inner"><span data-i18n="form.send">Send message</span>
-                <span class="arrow" aria-hidden="true">&#8599;</span></span>
+                <span class="btn-inner"><span data-i18n="form.send">Send message</span></span>
               </button>
             </div>
           </form>
@@ -1651,6 +2068,15 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
               </a>
             </div>
             <div class="meta-row">
+              <span>GitHub</span>
+              <a class="li" href="https://github.com/gustavo-gasperin" target="_blank" rel="noopener noreferrer">
+                <svg class="li-mark" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" focusable="false">
+                  <path class="li-fill" fill-rule="evenodd" d="M12 .6a11.5 11.5 0 0 0-3.63 22.42c.57.1.79-.25.79-.56l-.02-1.97c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.95.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.13l-.01 3.16c0 .31.21.67.79.56A11.5 11.5 0 0 0 12 .6Z" />
+                </svg>
+                <span>/gustavo-gasperin</span>
+              </a>
+            </div>
+            <div class="meta-row">
               <span data-i18n="contact.based">Based in</span>
               <span class="mv" data-i18n-html="contact.city">Kent, Ohio, USA<br>Curitiba, Paraná, Brazil</span>
             </div>
@@ -1659,6 +2085,10 @@ html.anim .topo .node,html.anim .topo .lbl{opacity:0}
               <span class="mv" data-i18n="contact.langsv">English · Português</span>
             </div>
           </div>
+
+          <a class="btn resume-btn" href="resume.pdf" target="_blank" rel="noopener" data-reveal>
+            <span data-i18n="contact.resume">Download Resume (PDF)</span>
+          </a>
         </div>
 
       </div>
@@ -1685,6 +2115,7 @@ window.I18N = {
 
     'nav.role': 'Engineering Portfolio',
     'nav.about': 'About',
+    'nav.theme': 'Toggle dark mode',
     'nav.education': 'Education',
     'nav.experience': 'Experience',
     'nav.work': 'Projects',
@@ -1751,11 +2182,20 @@ window.I18N = {
     'exp.s4': 'Apr 2023 — Jul 2023',
     'exp.r4': 'Associate IT User Support Analyst',
     'exp.l4': '4 mos',
-    'exp.d1h': 'Support & triage',
-    'exp.d1p': 'Tier 1 and Tier 2 support for college faculty, staff, and students.',
-    'exp.d2h': 'Deployment & administration',
-    'exp.d2p': 'Imaging, provisioning, and lifecycle management across macOS, Windows, and Linux endpoints.',
-    'exp.d2p2': 'Active Directory objects and group policy, Microsoft Azure management, bench-level hardware repair, and project coordination across the office.',
+
+    'exp.g1h': 'IT infrastructure & systems administration',
+    'exp.g1b1': '<b>Systems administration.</b> Manage Active Directory, Microsoft Azure, and Jamf objects.',
+    'exp.g1b2': '<b>Endpoint management.</b> Execute imaging and provisioning across macOS, Windows, and Linux endpoints to ensure optimal system performance.',
+    'exp.g1b3': '<b>IT solutions development.</b> Partner with full-time staff to design and deploy custom IT solutions that resolve day-to-day university challenges and improve operational efficiency.',
+    'exp.g1b4': '<b>Hardware diagnostics and maintenance.</b> Run system diagnostics and perform hardware repairs, including component repurposing, to restore functionality. Triage and coordinate with authorized external service centers for advanced failures.',
+    'exp.g2h': 'Technical support & integration',
+    'exp.g2b1': '<b>Laboratory systems integration.</b> Deliver IT support for active science laboratories, resolving connectivity issues between computer systems and research instruments.',
+    'exp.g2b2': '<b>Tier 1 and Tier 2 resolution.</b> Provide technical support for college faculty, staff, and students, resolving hardware, software, and networking escalations.',
+    'exp.g2b3': '<b>Ticket and operations management.</b> Co-facilitate weekly ticket review meetings, monitor resolution progress, and coordinate directly with faculty and staff to ensure timely service delivery.',
+    'exp.g3h': 'Leadership, mentorship & event operations',
+    'exp.g3b1': '<b>Talent acquisition.</b> Serve as an interview panelist and reviewer for student technician roles, collaborating with full-time staff to evaluate candidates and finalize hiring decisions.',
+    'exp.g3b2': '<b>Training and mentorship.</b> Onboard and mentor incoming student employees with hands-on training for IT workflows, departmental processes, and documentation standards.',
+    'exp.g3b3': '<b>Live event production.</b> Deliver on-site technical and audiovisual support for university events, managing microphone setups and serving as the primary IT resource on site.',
     'chip.deploy': 'Imaging & Deployment',
     'chip.hw': 'Hardware Diagnostics',
     'chip.ticket': 'Ticketing System',
@@ -1854,7 +2294,6 @@ window.I18N = {
     'p3.tech': 'Arduino Uno R3 · C · millis()<br>Servo · Photoresistor · Buzzer · Tinkercad',
 
     'form.title': 'Send me a message.',
-    'form.lede': "Goes straight to my inbox. I read everything and reply to anything that isn't a sales pitch.",
     'form.name': 'Name',
     'form.email': 'Email',
     'form.subject': 'Subject',
@@ -1875,7 +2314,23 @@ window.I18N = {
     'form.errMax': 'Message limit reached for this visit.',
     'form.errCaptcha': 'Please complete the captcha.',
 
+    'cert.label': 'Certifications',
+    'cert.verify': 'Verify ↗',
+    'cert.t1': 'React Native',
+    'cert.m1': 'Meta · Coursera · June 2023',
+    'cert.b1': 'A Meta course program on building cross-platform mobile applications with React Native.',
+    'cert.a1': 'React Native course certificate — Meta, via Coursera',
+    'cert.t2': 'Programming Foundations with JavaScript, HTML and CSS',
+    'cert.m2': 'Duke University · Coursera · May 2023 · With honors',
+    'cert.b2': 'Programming fundamentals and building web pages with JavaScript, HTML, and CSS.',
+    'cert.a2': 'Programming Foundations with JavaScript, HTML and CSS certificate — Duke University, via Coursera',
+    'cert.t3': 'Social Media Marketing Certification',
+    'cert.m3': 'Hootsuite Academy · May 2022 · ID 50928701',
+    'cert.b3': 'Social media strategy, community building, content marketing, and social media advertising.',
+    'cert.a3': 'Social Media Marketing Certification — Hootsuite Academy',
+
     'contact.label': 'Contact',
+    'contact.resume': 'Download Resume (PDF)',
     'contact.mail': 'Email',
     'contact.based': 'Based in',
     'contact.city': 'Kent, Ohio, USA<br>Curitiba, Paran\u00E1, Brazil',
@@ -1892,6 +2347,7 @@ window.I18N = {
 
     'nav.role': 'Portfólio de Engenharia',
     'nav.about': 'Sobre',
+    'nav.theme': 'Alternar modo escuro',
     'nav.education': 'Formação',
     'nav.experience': 'Experiência',
     'nav.work': 'Projetos',
@@ -1958,11 +2414,20 @@ window.I18N = {
     'exp.s4': 'Abr 2023 — Jul 2023',
     'exp.r4': 'Associate IT User Support Analyst',
     'exp.l4': '4 meses',
-    'exp.d1h': 'Suporte e triagem',
-    'exp.d1p': 'Suporte nível 1 e 2 para docentes, equipe e estudantes da faculdade.',
-    'exp.d2h': 'Implantação e administração',
-    'exp.d2p': 'Imagem, provisionamento e gestão de ciclo de vida em endpoints macOS, Windows e Linux.',
-    'exp.d2p2': 'Objetos e políticas de grupo no Active Directory, gestão no Microsoft Azure, reparo de hardware em bancada e coordenação de projetos do escritório.',
+
+    'exp.g1h': 'Infraestrutura de TI e administração de sistemas',
+    'exp.g1b1': '<b>Administração de sistemas.</b> Gerencio objetos do Active Directory, do Microsoft Azure e do Jamf.',
+    'exp.g1b2': '<b>Gestão de endpoints.</b> Executo imagem e provisionamento em máquinas macOS, Windows e Linux para manter o desempenho ideal.',
+    'exp.g1b3': '<b>Desenvolvimento de soluções de TI.</b> Trabalho junto à equipe efetiva no desenho e na implantação de soluções sob medida que resolvem problemas do dia a dia da universidade e aumentam a eficiência operacional.',
+    'exp.g1b4': '<b>Diagnóstico e manutenção de hardware.</b> Faço diagnósticos e reparos de hardware, incluindo o reaproveitamento de componentes, para restaurar o funcionamento. Faço a triagem e a coordenação com centros de assistência autorizados nos casos mais complexos.',
+    'exp.g2h': 'Suporte técnico e integração',
+    'exp.g2b1': '<b>Integração de sistemas laboratoriais.</b> Ofereço suporte de TI a laboratórios de ciências em atividade, resolvendo problemas de conectividade entre computadores e instrumentos de pesquisa.',
+    'exp.g2b2': '<b>Atendimento nível 1 e 2.</b> Presto suporte técnico a docentes, equipe e estudantes da faculdade, resolvendo escalonamentos de hardware, software e rede.',
+    'exp.g2b3': '<b>Gestão de chamados e operações.</b> Coconduzo as reuniões semanais de revisão de chamados, acompanho o andamento das resoluções e falo diretamente com docentes e equipe para garantir a entrega no prazo.',
+    'exp.g3h': 'Liderança, mentoria e operação de eventos',
+    'exp.g3b1': '<b>Seleção de pessoal.</b> Atuo como entrevistador e avaliador nas vagas de técnico estudantil, colaborando com a equipe efetiva na avaliação de candidatos e na decisão final de contratação.',
+    'exp.g3b2': '<b>Treinamento e mentoria.</b> Integro e oriento os novos estudantes contratados, com treinamento prático em fluxos de trabalho de TI, processos do departamento e padrões de documentação.',
+    'exp.g3b3': '<b>Produção de eventos ao vivo.</b> Dou suporte técnico e audiovisual presencial em eventos da universidade, cuidando da configuração de microfones e atuando como a referência de TI no local.',
     'chip.deploy': 'Imagem e Implantação',
     'chip.hw': 'Diagnóstico de Hardware',
     'chip.ticket': 'Sistema de Chamados',
@@ -2061,7 +2526,6 @@ window.I18N = {
     'p3.tech': 'Arduino Uno R3 · C · millis()<br>Servo · Fotorresistor · Buzzer · Tinkercad',
 
     'form.title': 'Envie uma mensagem.',
-    'form.lede': 'Vai direto para a minha caixa de entrada. Leio tudo e respondo a tudo que não for oferta comercial.',
     'form.name': 'Nome',
     'form.email': 'E-mail',
     'form.subject': 'Assunto',
@@ -2082,7 +2546,23 @@ window.I18N = {
     'form.errMax': 'Limite de mensagens desta visita atingido.',
     'form.errCaptcha': 'Complete o captcha.',
 
+    'cert.label': 'Certificações',
+    'cert.verify': 'Verificar ↗',
+    'cert.t1': 'React Native',
+    'cert.m1': 'Meta · Coursera · Junho de 2023',
+    'cert.b1': 'Programa de cursos da Meta sobre desenvolvimento de aplicativos móveis multiplataforma com React Native.',
+    'cert.a1': 'Certificado do curso React Native — Meta, pela Coursera',
+    'cert.t2': 'Programming Foundations with JavaScript, HTML and CSS',
+    'cert.m2': 'Duke University · Coursera · Maio de 2023 · Com honras',
+    'cert.b2': 'Fundamentos de programação e construção de páginas web com JavaScript, HTML e CSS.',
+    'cert.a2': 'Certificado de Programming Foundations with JavaScript, HTML and CSS — Duke University, pela Coursera',
+    'cert.t3': 'Certificação em Marketing de Mídias Sociais',
+    'cert.m3': 'Hootsuite Academy · Maio de 2022 · ID 50928701',
+    'cert.b3': 'Estratégia de mídias sociais, construção de comunidade, marketing de conteúdo e publicidade em redes sociais.',
+    'cert.a3': 'Certificação em Marketing de Mídias Sociais — Hootsuite Academy',
+
     'contact.label': 'Contato',
+    'contact.resume': 'Baixar Currículo (PDF)',
     'contact.mail': 'E-mail',
     'contact.based': 'Base',
     'contact.city': 'Kent, Ohio, EUA<br>Curitiba, Paran\u00E1, Brasil',
@@ -2090,6 +2570,252 @@ window.I18N = {
     'contact.langsv': 'Português · Inglês',
     'contact.credit': 'Página feita por Gustavo Gasperin e Claude AI',
     'contact.refs': 'Referências sob solicitação'
+  },
+
+  it: {
+    'meta.title': 'Gustavo Gasperin — Portfolio di Ingegneria',
+    'meta.desc': 'Gustavo Gasperin — Technology Administration Graduate Assistant e candidato M.E.T. alla Kent State University. IT aziendale, reti e sistemi embedded.',
+
+    'nav.role': 'Portfolio di Ingegneria',
+    'nav.about': 'Chi sono',
+    'nav.theme': 'Attiva o disattiva la modalità scura',
+    'nav.education': 'Formazione',
+    'nav.experience': 'Esperienza',
+    'nav.work': 'Progetti',
+    'nav.contact': 'Contatti',
+
+    'hero.l1': 'Soluzioni di ingegneria',
+    'hero.l2': 'adattabili per il',
+    'hero.l3': 'panorama tecnologico',
+    'hero.l4': 'moderno.',
+    'hero.sub': "Un portfolio di lavori in tecnologia dell'ingegneria e sistemi IT",
+    'hero.scroll': 'Scorri',
+
+    'about.label': 'Chi sono',
+    'about.count': 'Curitiba → Kent · Dal 2021',
+    'about.p1': "Sono un professionista dell'ingegneria attento ai dettagli, attualmente iscritto al Master (M.E.T.) in Engineering Technology alla Kent State University, dove ho conseguito anche la laurea (B.S.) in Computer Engineering Technology. Possiedo inoltre una laurea interdisciplinare in Scienze e Discipline Umanistiche presso la PUCPR. Oggi lavoro come Technology Administration Graduate Assistant per l'ufficio informatico del College of Sciences and Humanities della Kent State.",
+    'about.p2': "Con esperienza pratica nel supporto IT, nei sistemi embedded e nelle reti, ho una comprovata capacità di diagnosticare e ottimizzare sistemi complessi. Sono motivato ad applicare le mie competenze tecniche per ampliare costantemente le mie conoscenze e costruire una carriera di successo nel campo dell'ingegneria, puntando sempre a raggiungere e superare gli obiettivi aziendali.",
+    'about.alt': 'Gustavo Gasperin — ritratto professionale',
+    'about.caploc': 'Kent, Ohio · 2025',
+
+    'edu.label': 'Formazione',
+    'edu.title': 'Due paesi, un solo percorso.',
+    'edu.h1': 'Lode accademica',
+    'edu.h2': "Dean's List",
+    'edu.h3': "President's List",
+    'edu.h4': 'Media complessiva',
+    'edu.d1': 'Gen 2026 — In corso',
+    'edu.t1': 'M.E.T., Master of Engineering Technology',
+    'edu.n1': "Un percorso avanzato che unisce competenze tecniche di ingegneria e capacità gestionali per rispondere alle esigenze dell'industria moderna. Il programma si concentra su soluzioni applicate nelle tecnologie emergenti: automazione industriale, gestione di IT e reti, ingegneria dei sistemi, manifattura additiva e analisi aziendale.",
+    'edu.d2': 'Feb 2021 — Dic 2025',
+    'edu.t2': 'B.S., Computer Engineering Technology <span class="sub">· Minor in Business</span>',
+    'edu.n2': 'Un programma pratico che collega hardware e software per costruire, proteggere e ottimizzare i sistemi informatici moderni. Riconosciuto dalla National Security Agency (NSA) come Center of Academic Excellence in Cyber Defense, il curriculum offre esperienza diretta su infrastrutture IT critiche e tecnologie informatiche avanzate.',
+    'edu.n2b': 'Il titolo è stato conferito il 13 dicembre 2025, con lode Summa Cum Laude e una media complessiva di 3.90. Tra i corsi specialistici completati: Networking I e II, Sicurezza delle Reti, Progettazione Digitale, Sistemi Embedded Applicati, Amministrazione di Server I e II e Gestione dei Progetti di Ingegneria.',
+    'edu.dip.view': 'Apri a dimensione intera ↗',
+    'edu.dip2.cap': 'Diploma · 13 dicembre 2025',
+    'edu.dip2.alt': 'Diploma della Kent State University — Bachelor of Science in Computer Engineering Technology, Summa Cum Laude',
+    'edu.dip3.cap': 'Diploma · 2 febbraio 2026',
+    'edu.dip3.alt': 'Diploma PUCPR — Bacharel Interdisciplinar em Ciências e Humanidades',
+    'edu.dip4.cap': 'Diploma · dicembre 2022',
+    'edu.dip4.alt': 'Diploma della Kent State University — Associate of Science',
+    'edu.d3': 'Feb 2021 — Feb 2026',
+    'edu.t3': 'Laurea Interdisciplinare in Scienze e Discipline Umanistiche',
+    'edu.n3': 'Corsi completati il 29 novembre 2025; titolo conferito il 2 febbraio 2026.',
+    'edu.d4': 'Feb 2021 — Dic 2022',
+    'edu.t4': 'Associate of Science',
+    'edu.n4': 'Media 3.92. Il primo titolo del percorso American Academy.',
+    'edu.d5': 'Gen 2019 — Nov 2020',
+    'edu.t5': 'Diploma del Baccalaureato Internazionale',
+    'edu.n5': 'Sessione di novembre 2020.',
+
+    'exp.label': 'Esperienza',
+    'exp.count': 'Un ateneo · Quattro ruoli',
+    'exp.role': 'Technology Administration — Graduate Assistant',
+    'exp.org': 'Kent State University · College of Sciences and Humanities, Office of Technology',
+    'exp.s1': 'Gen 2026 — Presente',
+    'exp.r1': 'Technology Administration — Graduate Assistant',
+    'exp.l1': 'Attuale',
+    'exp.s2': 'Mag 2024 — Dic 2025',
+    'exp.r2': 'Lead IT Support Analyst',
+    'exp.l2': '1 anno 8 mesi',
+    'exp.s3': 'Ago 2023 — Mag 2024',
+    'exp.r3': 'IT Support Analyst',
+    'exp.l3': '10 mesi',
+    'exp.s4': 'Apr 2023 — Lug 2023',
+    'exp.r4': 'Associate IT User Support Analyst',
+    'exp.l4': '4 mesi',
+
+    'exp.g1h': 'Infrastruttura IT e amministrazione dei sistemi',
+    'exp.g1b1': '<b>Amministrazione dei sistemi.</b> Gestisco gli oggetti di Active Directory, Microsoft Azure e Jamf.',
+    'exp.g1b2': '<b>Gestione degli endpoint.</b> Curo imaging e provisioning su dispositivi macOS, Windows e Linux per mantenere prestazioni ottimali.',
+    'exp.g1b3': "<b>Sviluppo di soluzioni IT.</b> Collaboro con il personale strutturato alla progettazione e alla messa in opera di soluzioni su misura che risolvono i problemi quotidiani dell'ateneo e migliorano l'efficienza operativa.",
+    'exp.g1b4': '<b>Diagnostica e manutenzione hardware.</b> Eseguo diagnosi e riparazioni hardware, compreso il recupero di componenti, per ripristinare il funzionamento. Smisto e coordino con i centri di assistenza autorizzati i guasti più complessi.',
+    'exp.g2h': 'Supporto tecnico e integrazione',
+    'exp.g2b1': '<b>Integrazione dei sistemi di laboratorio.</b> Fornisco supporto IT ai laboratori scientifici attivi, risolvendo problemi di connettività tra i computer e la strumentazione di ricerca.',
+    'exp.g2b2': '<b>Assistenza di primo e secondo livello.</b> Offro supporto tecnico a docenti, personale e studenti del college, risolvendo escalation hardware, software e di rete.',
+    'exp.g2b3': "<b>Gestione dei ticket e delle operazioni.</b> Coconduco le riunioni settimanali di revisione dei ticket, monitoro l'avanzamento delle risoluzioni e mi coordino direttamente con docenti e personale per rispettare i tempi di servizio.",
+    'exp.g3h': 'Leadership, mentoring e gestione degli eventi',
+    'exp.g3b1': '<b>Selezione del personale.</b> Partecipo come membro della commissione e valutatore per i ruoli di tecnico studente, collaborando con il personale strutturato alla valutazione dei candidati e alle decisioni di assunzione.',
+    'exp.g3b2': '<b>Formazione e mentoring.</b> Inserisco e affianco i nuovi studenti assunti, con formazione pratica sui flussi di lavoro IT, sui processi del dipartimento e sugli standard di documentazione.',
+    'exp.g3b3': "<b>Produzione di eventi dal vivo.</b> Fornisco supporto tecnico e audiovisivo in presenza agli eventi dell'ateneo, gestendo l'impianto microfonico e facendo da riferimento IT sul posto.",
+
+    'chip.deploy': 'Imaging e Distribuzione',
+    'chip.hw': 'Diagnostica Hardware',
+    'chip.ticket': 'Sistema di Ticket',
+    'chip.asset': 'Gestione degli Asset',
+    'chip.service': 'Assistenza Clienti',
+
+    'proj.label': 'Progetti',
+    'proj.count': 'Quattro progetti · 2023 — 2025',
+    'proj.now': 'In visione',
+    'proj.hint': 'Passa sul nodo per isolarlo',
+
+    'p1.eyebrow': 'Networking II · Progetto finale di gruppo',
+    'p1.title': 'Una rete aziendale di medie dimensioni per oltre 1.000 utenti.',
+    'p1.b1': 'Per il corso di ingegneria Networking II ho lavorato in gruppo alla progettazione e alla realizzazione di una rete aziendale di medie dimensioni in Cisco Packet Tracer — un campus principale di tre edifici più due sedi remote, pensata per essere sicura, scalabile, ridondante e pienamente connessa a internet.',
+    'p1.b2': 'Il lavoro ha applicato la progettazione di rete, il subnetting IPv4 e IPv6 e la configurazione dei protocolli su VLAN, OSPF, HSRP, NAT, DHCP, DNS, STP ed EtherChannel, insieme alla diagnostica e alla sicurezza dei sistemi.',
+    'p1.b3': 'Mi ha permesso di dimostrare capacità di pianificazione, configurazione e messa in sicurezza di una rete aziendale, lavorando allo stesso tempo in gruppo. Abbiamo soddisfatto tutti i requisiti del progetto.',
+    'p1.k1': 'Scala',
+    'p1.v1': 'Oltre 1.000 utenti',
+    'p1.k2': 'Sedi',
+    'p1.v2': '1 campus, 3 edifici + 2 remote',
+    'p1.k3': 'Realizzato in',
+    'p1.v3': 'Cisco Packet Tracer',
+    'p1.k4': 'Indirizzamento',
+    'p1.v4': 'Dual stack IPv4 / IPv6',
+    'p1.figcap': 'Fig. 01 — Core del campus; collegamenti remoti in rosso',
+    'p1.idx': 'Networking II · Progetto finale',
+    'p1.card': 'Rete Aziendale',
+    'p1.cardbody': 'Una rete aziendale di medie dimensioni per oltre 1.000 utenti — tre edifici del campus, due sedi remote, core ridondante.',
+    'p1.tech': 'Cisco Packet Tracer · OSPF · HSRP<br>VLAN · NAT · DHCP · DNS · IPv4 / IPv6',
+
+    'p2.v1': 'Cmunt · Gasperin · LeJeune · Conrad · Caldwell',
+    'p2.v2': 'Arduino Mega 2560',
+    'p2.v3': 'Fusion 360 · PETG · Stratasys F370',
+    'p2.v4': '524 $ su 1.000 $',
+
+    'p3.v1': 'Arduino Uno R3',
+    'p3.v2': 'Solo millis() — nessun delay()',
+    'p3.v3': '6 LED · servo · cicalino · fotoresistenza',
+    'p3.v4': '4 obbligatorie · 2 secondarie · 2 comfort · 1 extra',
+
+    'p4.v1': 'Pathways to a Semiconductor Career',
+    'p4.v2': 'Intel × Kent State University',
+    'p4.v3': 'Fotolitografia · RIE · ALD',
+
+    'proj.zoom': 'Clicca per ingrandire',
+
+    'p4.eyebrow': 'Kent State Pathways to a Semiconductor Career · 2024',
+    'p4.title': 'Patterning di wafer, fatto a mano in camera bianca.',
+    'p4.b1': 'Ho partecipato al corso Pathways to a Semiconductor Career della Kent State University, dedicato al settore dei semiconduttori e ai processi di produzione di wafer, transistor e chip. È stato affascinante scoprire la complessità che sta dietro ai semiconduttori presenti in ogni dispositivo che usiamo.',
+    'p4.b2': 'Il progetto finale è consistito in una presentazione completa degli argomenti trattati, oltre al patterning pratico di un wafer nella camera bianca della Kent State con fotolitografia, incisione ionica reattiva e deposizione di strati atomici.',
+    'p4.b3': 'Realizzato con le compagne di progetto Angelina Urbina e Kaydence Porter, il cui lavoro ha dato forma al progetto e reso le sessioni in camera bianca davvero collaborative.',
+    'p4.b4': "Grazie a Intel e alla Kent State per l'opportunità, alla coordinatrice del corso Marina Goldshmidt e ai docenti Dr. David Kirby e Dr. Flavia P. N. Inbanathan per la loro guida. Il settore continua a evolversi e voglio vedere dove arriverà.",
+    'p4.k1': 'Programma',
+    'p4.k2': 'Partner',
+    'p4.k3': 'Tecniche',
+    'p4.k4': 'Gruppo',
+    'p4.v4': 'Urbina · Porter · Gasperin',
+    'p4.figcap': 'Poster finale, lavoro in camera bianca e il wafer con pattern',
+    'p4.ph1': 'Banco umido — risciacquo con IPA',
+    'p4.ph2': 'Wafer con pattern sotto la luce della camera bianca',
+    'p4.ph3': 'Sessione poster, Kent State',
+    'p4.ph5': 'Unveiling the Layers — poster finale',
+    'p4.ph4': 'Laboratorio di automazione — FANUC LR Mate 200iD',
+    'p4.idx': 'Corso sui semiconduttori · 2024',
+    'p4.card': 'Produzione di Semiconduttori in Camera Bianca',
+    'p4.cardbody': 'Patterning di wafer nella camera bianca della Kent State — fotolitografia, incisione ionica reattiva e deposizione di strati atomici.',
+    'p4.tech': 'Fotolitografia · RIE · ALD<br>Protocollo camera bianca · Metrologia',
+
+    'p2.eyebrow': 'Progetto finale CET · Primavera 2025',
+    'p2.title': 'Una cassetta che traccia gli attrezzi e gli accessi.',
+    'p2.b1': 'Nelle officine gli attrezzi si perdono, e le cassette intelligenti sul mercato hanno prezzi pensati per le grandi aziende, non per le case o le piccole botteghe. Il nostro progetto finale ne ha costruita una a misura di consumatore: custodire gli attrezzi, sapere chi li ha presi, bloccare i cassetti a tutti gli altri e tenere un registro sufficiente a ritrovare ciò che manca.',
+    'p2.b2': "Un tastierino 4x4 autentica gli utenti registrati e regola l'accesso ai cassetti in base alle credenziali. Sensori di forza sotto ciascuno dei sei alloggiamenti rilevano il prelievo, e un LCD 20x4 indica quale attrezzo è fuori, chi l'ha preso e quando. Serrature azionate da motori passo-passo tengono chiusi i cassetti, con durata di sblocco configurabile via codice.",
+    'p2.b3': 'Il contenitore è stato modellato in Fusion 360 e stampato in PETG su una Stratasys F370 — 13 x 12 x 11,5 pollici, stampato in due metà perché superava il piano di stampa. Un Arduino Mega 2560 gestisce tutto: 16 pin analogici per i sensori, 54 digitali per tastierino, display e serrature.',
+    'p2.b4': "Gran parte del progetto è nata da ciò che si è rotto. L'LCD 16x2 non bastava per il registro, così siamo passati al 20x4. Stepper.h non gestisce due motori, quindi le serrature usano MobaTools. L'alimentatore breakout non erogava corrente sufficiente ed è stato eliminato. Le piastre di pressione leggevano troppo debolmente finché la resistenza di pull-down non è stata regolata via codice. Consegnato entro un budget di 1.000 $, usandone 524.",
+    'p2.k1': 'Gruppo',
+    'p2.k2': 'Controllore',
+    'p2.k3': 'Contenitore',
+    'p2.k4': 'Budget',
+    'p2.figcap': 'Prototipo, contenitore stampato e unità finita',
+    'p2.ph1': 'Unità finita — tastierino e LCD 20x4',
+    'p2.ph2': 'Contenitore stampato, tre cassetti',
+    'p2.ph3': 'Interno — serrature passo-passo e il Mega',
+    'p2.ph4': 'Organizer in gommapiuma con sensori di forza',
+    'p2.ph5': 'Prototipo su breadboard',
+    'p2.idx': 'Progetto finale CET · 2025',
+    'p2.card': 'Cassetta Intelligente',
+    'p2.cardbody': 'Una cassetta che traccia gli attrezzi — accesso con tastierino, un sensore di forza sotto ogni attrezzo, serrature motorizzate e un registro di chi ha preso cosa.',
+    'p2.tech': 'Arduino Mega 2560 · C · Motori passo-passo<br>Sensori di forza · LCD 20x4 · Fusion 360 · PETG',
+
+    'proj.live': 'Dal vivo — aziona gli interruttori',
+
+    'p3.eyebrow': 'ENGR-33222 · Sfida di progettazione · 2025',
+    'p3.title': 'Un Body Control Module, scritto da zero.',
+    'p3.b1': 'Le auto moderne concentrano luci, tergicristalli, finestrini e serrature in un unico microcontrollore chiamato Body Control Module. La sfida finale del mio corso di sistemi embedded era costruirne uno: quattro funzioni obbligatorie, due secondarie e due di comfort, tutte in un solo programma su un Arduino Uno R3.',
+    'p3.b2': 'Obbligatorie: fari abbaglianti e anabbaglianti, luci di posizione, frecce destra e sinistra con le quattro frecce, e luci di stop. Secondarie: tergicristalli azionati da servomotore a due velocità e un motore per il finestrino con salita e discesa automatiche. Comfort: commutazione automatica tra abbaglianti e anabbaglianti tramite una fotoresistenza che rileva i fari in arrivo, e segnale di cambio corsia che lampeggia tre volte con un solo tocco. In più, un cicalino passivo come clacson.',
+    'p3.b3': 'Due pin di uscita svolgono più funzioni ciascuno: D10 è anabbagliante, luce di posizione e primo LED rosso; D4 è abbagliante, stop e il secondo. Gli interruttori sono ponticelli verso massa su pin INPUT_PULLUP, perché il kit non ne aveva. Le specifiche vietavano delay(), quindi ogni temporizzazione — il lampeggio da 500 ms, la spazzata del tergicristallo da 1000/300 ms, il conteggio dei sei cicli del cambio corsia — si basa su millis() e il loop non si blocca mai.',
+    'p3.b4': 'Lo schema qui sotto è lo stesso foglio che ho disegnato in Tinkercad, ricostruito come codice perché funzioni davvero. Aziona un interruttore e la logica del firmware decide cosa si accende: le linee si attivano, i LED si illuminano, il servo si muove e il monitor seriale stampa esattamente ciò che stampava la scheda.',
+    'p3.k1': 'Controllore',
+    'p3.k2': 'Temporizzazione',
+    'p3.k3': 'I/O',
+    'p3.k4': 'Funzioni',
+    'p3.figcap': 'Schema Tinkercad, ricostruito in HTML e in esecuzione',
+    'p3.ph1': 'Schema della breadboard in Tinkercad',
+    'p3.c1': 'Interruttori',
+    'p3.c2': 'Fari',
+    'p3.c3': 'Luce ambientale (A0)',
+    'p3.c4': 'Servo',
+    'p3.idx': 'Sistemi embedded · 2025',
+    'p3.card': 'Body Control Module',
+    'p3.cardbody': 'Un body control module su un solo Uno — luci, frecce, tergicristalli, finestrino e clacson, tutto su millis() senza attese bloccanti.',
+    'p3.tech': 'Arduino Uno R3 · C · millis()<br>Servo · Fotoresistenza · Cicalino · Tinkercad',
+
+    'form.title': 'Scrivimi un messaggio.',
+    'form.name': 'Nome',
+    'form.email': 'Email',
+    'form.subject': 'Oggetto',
+    'form.message': 'Messaggio',
+    'form.send': 'Invia messaggio',
+    'form.sending': 'Invio in corso…',
+    'form.ok': "Messaggio inviato — grazie. Risponderò all'indirizzo che hai indicato.",
+    'form.err': 'Invio non riuscito. Scrivimi direttamente via email.',
+    'form.errFix': 'Controlla i campi evidenziati.',
+    'form.errName': 'Inserisci il tuo nome',
+    'form.errEmail': 'Inserisci un indirizzo email valido',
+    'form.errTopic': "L'oggetto è troppo lungo",
+    'form.errShort': 'Scrivi almeno 20 caratteri',
+    'form.errLong': 'Il messaggio è troppo lungo',
+    'form.errBot': 'Invio bloccato.',
+    'form.errFast': 'Troppo veloce — riprova tra un momento.',
+    'form.errWait': 'Attendi un minuto prima di inviare di nuovo.',
+    'form.errMax': 'Limite di messaggi raggiunto per questa visita.',
+    'form.errCaptcha': 'Completa il captcha.',
+
+    'cert.label': 'Certificazioni',
+    'cert.verify': 'Verifica ↗',
+    'cert.t1': 'React Native',
+    'cert.m1': 'Meta · Coursera · Giugno 2023',
+    'cert.b1': 'Programma di corsi Meta sullo sviluppo di applicazioni mobili multipiattaforma con React Native.',
+    'cert.a1': 'Certificato del corso React Native — Meta, tramite Coursera',
+    'cert.t2': 'Programming Foundations with JavaScript, HTML and CSS',
+    'cert.m2': 'Duke University · Coursera · Maggio 2023 · Con lode',
+    'cert.b2': 'Fondamenti di programmazione e costruzione di pagine web con JavaScript, HTML e CSS.',
+    'cert.a2': 'Certificato di Programming Foundations with JavaScript, HTML and CSS — Duke University, tramite Coursera',
+    'cert.t3': 'Certificazione in Social Media Marketing',
+    'cert.m3': 'Hootsuite Academy · Maggio 2022 · ID 50928701',
+    'cert.b3': 'Strategia social, costruzione della community, content marketing e pubblicità sui social media.',
+    'cert.a3': 'Certificazione in Social Media Marketing — Hootsuite Academy',
+
+    'contact.label': 'Contatti',
+    'contact.resume': 'Scarica il CV (PDF)',
+    'contact.mail': 'Email',
+    'contact.based': 'Sede',
+    'contact.city': 'Kent, Ohio, USA<br>Curitiba, Paraná, Brasile',
+    'contact.langs': 'Lingue',
+    'contact.langsv': 'Inglese · Portoghese',
+    'contact.credit': 'Pagina realizzata da Gustavo Gasperin e Claude AI',
+    'contact.refs': 'Referenze disponibili su richiesta'
   }
 };
 
@@ -2648,8 +3374,8 @@ var BCM = (function () {
       '<div class="bcm-sheet">' + svgMarkup() + '</div>' +
       '<div class="bcm-side">' +
         '<a class="shot bcm-photo" href="images/bcm-breadboard.jpg" target="_blank" rel="noopener">' +
-          '<span class="shot-frame"><img src="images/bcm-breadboard.jpg" alt="' +
-            esc(d['p3.ph1']||'') + '" loading="lazy" /><span class="shot-missing">images/bcm-breadboard.jpg</span></span>' +
+          '<span class="shot-frame"><img src="images/bcm-breadboard.jpg" width="702" height="516" alt="' +
+            esc(d['p3.ph1']||'') + '" loading="lazy" decoding="async" /><span class="shot-missing">images/bcm-breadboard.jpg</span></span>' +
           '<span class="shot-cap">' + esc(d['p3.ph1']||'') + '</span>' +
         '</a>' +
         '<div class="serial"><div class="serial-h">Serial monitor · 9600</div><div class="serial-b" data-serial></div></div>' +
@@ -2794,22 +3520,22 @@ var PROJECTS = [
   { key: 'p2', rows: 4, paras: 4, figure: 'gallery',
     chips: ['Arduino Mega 2560','C / C++','MobaTools','Keypad 4x4','LCD 20x4','Force-sensitive resistors','Stepper motors','Fusion 360','PETG','Stratasys F370'],
     photos: [
-      { src: 'images/toolbox-finished.jpg',   cap: 'p2.ph1', wide: true },
-      { src: 'images/toolbox-enclosure.jpg',  cap: 'p2.ph2' },
-      { src: 'images/toolbox-interior.jpg',   cap: 'p2.ph3' },
-      { src: 'images/toolbox-foam.jpg',       cap: 'p2.ph4' },
-      { src: 'images/toolbox-breadboard.jpg', cap: 'p2.ph5' }
+      { src: 'images/toolbox-finished.jpg', w: 1600, h: 1600,   cap: 'p2.ph1', wide: true },
+      { src: 'images/toolbox-enclosure.jpg', w: 1600, h: 1462,  cap: 'p2.ph2' },
+      { src: 'images/toolbox-interior.jpg', w: 1600, h: 1600,   cap: 'p2.ph3' },
+      { src: 'images/toolbox-foam.jpg', w: 1600, h: 1600,       cap: 'p2.ph4' },
+      { src: 'images/toolbox-breadboard.jpg', w: 1600, h: 1600, cap: 'p2.ph5' }
     ] },
   { key: 'p3', rows: 4, paras: 4, figure: 'bcm',
     chips: ['Arduino Uno R3','C','millis()','Servo.h','Photoresistor','Passive buzzer','Serial','Tinkercad'] },
   { key: 'p4', rows: 4, paras: 4, figure: 'gallery',
     chips: ['Photolithography','Reactive ion etching','Atomic layer deposition','Cleanroom protocol','Metrology','Spin coating'],
     photos: [
-      { src: 'images/semiconductor-poster.jpg',    cap: 'p4.ph5', doc: true },
-      { src: 'images/semiconductor-ppe.jpg',    cap: 'p4.ph1' },
-      { src: 'images/semiconductor-wafer.jpg',  cap: 'p4.ph2' },
-      { src: 'images/semiconductor-poster-session.jpg', cap: 'p4.ph3' },
-      { src: 'images/semiconductor-fanuc.jpg',  cap: 'p4.ph4' }
+      { src: 'images/semiconductor-poster.jpg', w: 2500, h: 1875,    cap: 'p4.ph5', doc: true },
+      { src: 'images/semiconductor-ppe.jpg', w: 1280, h: 1706,    cap: 'p4.ph1' },
+      { src: 'images/semiconductor-wafer.jpg', w: 1764, h: 1536,  cap: 'p4.ph2' },
+      { src: 'images/semiconductor-poster-session.jpg', w: 1459, h: 924, cap: 'p4.ph3' },
+      { src: 'images/semiconductor-fanuc.jpg', w: 1280, h: 1706,  cap: 'p4.ph4' }
     ] }
 ];
 
@@ -2855,7 +3581,8 @@ var Carousel = (function () {
         var cls = 'shot' + (ph.doc ? ' shot--doc' : '') + (ph.wide ? ' shot--wide' : '');
         return '<a class="' + cls + '" href="' + ph.src + '" target="_blank" rel="noopener">' +
                  '<span class="shot-frame">' +
-                   '<img src="' + ph.src + '" alt="' + esc(dict[ph.cap] || '') + '" loading="lazy" />' +
+                   '<img src="' + ph.src + '" width="' + ph.w + '" height="' + ph.h + '"' +
+                        ' alt="' + esc(dict[ph.cap] || '') + '" loading="lazy" decoding="async" />' +
                    '<span class="shot-missing">' + ph.src + '</span>' +
                  '</span>' +
                  '<span class="shot-cap">' + esc(dict[ph.cap] || '') + '</span>' +
@@ -2949,18 +3676,29 @@ var Carousel = (function () {
   }
 
   /* The topology draws itself; photos use the site's deal animation. */
-  function playFigure(slide) {
-    if (!slide) return;
-    if (slide.querySelector('[data-bcm]')) { BCM.start(); return; }
-    BCM.stop();
-    var svg = slide.querySelector('.diagram');
-    if (svg) { playDiagram(svg); return; }
+  /* Photographs start at opacity 0 and are dealt in on slide entry. Every
+     slide has to run this, including the ones whose main figure is a diagram
+     or the BCM — otherwise a photo sitting beside that figure never appears. */
+  function dealShots(slide) {
     slide.querySelectorAll('.shot').forEach(function (shot, n) {
       shot.classList.remove('in');
       void shot.offsetWidth;
       shot.style.animationDelay = (n * 0.09).toFixed(2) + 's';
       shot.classList.add('in');
     });
+  }
+
+  function playFigure(slide) {
+    if (!slide) return;
+    if (slide.querySelector('[data-bcm]')) {
+      BCM.start();
+      dealShots(slide);
+      return;
+    }
+    BCM.stop();
+    var svg = slide.querySelector('.diagram');
+    if (svg) playDiagram(svg);
+    dealShots(slide);
   }
 
   function show(i, fromUser) {
@@ -3021,6 +3759,26 @@ var Carousel = (function () {
       });
     });
 
+    /* Arrow keys move between projects, per the ARIA tabs pattern. No scroll
+       here — focus stays on the card and the panel below simply changes. */
+    var tablist = root.querySelector('[role="tablist"]');
+    if (tablist) {
+      tablist.addEventListener('keydown', function (e) {
+        var here = cards.indexOf(document.activeElement);
+        if (here < 0) return;
+        var last = cards.length - 1;
+        var to = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') to = here === last ? 0 : here + 1;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') to = here === 0 ? last : here - 1;
+        else if (e.key === 'Home') to = 0;
+        else if (e.key === 'End') to = last;
+        if (to === null) return;
+        e.preventDefault();
+        cards[to].focus();
+        show(to, true);
+      });
+    }
+
     // hovering or tabbing into the panel holds the current slide
     if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
       ['pointerenter', 'focusin'].forEach(function (ev) {
@@ -3059,7 +3817,7 @@ var Carousel = (function () {
     var dict = I18N[lang];
     window.__lang = lang;
 
-    document.documentElement.lang = (lang === 'pt') ? 'pt-BR' : 'en';
+    document.documentElement.lang = (lang === 'pt') ? 'pt-BR' : (lang === 'it') ? 'it-IT' : 'en';
     if (dict['meta.title']) document.title = dict['meta.title'];
 
     var metaDesc = document.querySelector('[data-i18n-meta="meta.desc"]');
@@ -3103,16 +3861,18 @@ var Carousel = (function () {
      (?lang=pt), which is useful for sending a Portuguese link to someone
      whose machine is in English. Anything else falls through to English. */
   function openingLang() {
-    var forced = (location.search.match(/[?&]lang=(en|pt)/i) || [])[1];
+    var forced = (location.search.match(/[?&]lang=(en|pt|it)/i) || [])[1];
     if (forced) return forced.toLowerCase();
     var nav = (navigator.language || navigator.userLanguage || '').toLowerCase();
-    return nav.indexOf('pt') === 0 ? 'pt' : 'en';
+    if (nav.indexOf('pt') === 0) return 'pt';
+    if (nav.indexOf('it') === 0) return 'it';
+    return 'en';
   }
   setLang(openingLang());
 
   /* ---------- Plate images: show the expected path if a file is missing ---------- */
-  document.querySelectorAll('[data-diploma] img, [data-portrait] img').forEach(function (img) {
-    var flag = function () { img.closest('.diploma, .portrait').classList.add('is-missing'); };
+  document.querySelectorAll('[data-diploma] img, [data-portrait] img, .cert img').forEach(function (img) {
+    var flag = function () { img.closest('.diploma, .portrait, .cert').classList.add('is-missing'); };
     img.addEventListener('error', flag);
     if (img.complete && img.naturalWidth === 0) flag();
   });
@@ -3151,6 +3911,40 @@ var Carousel = (function () {
       else window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset + offset, behavior: 'smooth' });
     });
   });
+
+  /* ---------- Light / dark ----------
+     The head script already resolved the opening theme. This only handles
+     the button and, for readers who have never pressed it, keeps the page
+     following the operating system if that setting changes mid-visit. */
+  (function () {
+    var docEl = document.documentElement;
+    var btn = document.querySelector('[data-theme-toggle]');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    var chosen = false;
+    try { chosen = localStorage.getItem('theme') === 'light' || localStorage.getItem('theme') === 'dark'; } catch (e) {}
+
+    function paint(theme) {
+      docEl.setAttribute('data-theme', theme);
+      if (btn) btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      if (meta) meta.setAttribute('content', theme === 'dark' ? '#0F1214' : '#FBFBF9');
+    }
+    paint(docEl.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var next = docEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        chosen = true;
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        paint(next);
+      });
+    }
+    if (mq && mq.addEventListener) {
+      mq.addEventListener('change', function (e) {
+        if (!chosen) paint(e.matches ? 'dark' : 'light');
+      });
+    }
+  })();
 
   if (!live) return;
 

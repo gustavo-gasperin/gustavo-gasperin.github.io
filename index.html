@@ -385,6 +385,82 @@ section{position:relative}
   padding-top:104px;
   padding-bottom:26px;
 }
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);align-items:center}
+.hero-copy{min-width:0}
+.hero-robot{width:min(60vw,280px);justify-self:center;margin-top:24px;pointer-events:none;user-select:none}
+.hero-robot svg{display:block;width:100%;height:auto;overflow:visible}
+.hero-robot .robot-bed{fill:#EEEFF0;stroke:#D5D8DA}
+.hero-robot .robot-bed-side{fill:#E0E3E5;stroke:#CFD3D6}
+.hero-robot .robot-guide{stroke:#C9CED2;fill:none}
+html[data-theme="dark"] .hero-robot .robot-bed{fill:#20272C;stroke:#354047}
+html[data-theme="dark"] .hero-robot .robot-bed-side{fill:#171D21;stroke:#354047}
+html[data-theme="dark"] .hero-robot .robot-guide{stroke:#43515A}
+.robot-build-layers,.robot-build-infill,.robot-print-detail{opacity:0}
+.robot-tool-yaw{transform:scaleX(.6) skewY(-9deg);transform-origin:414px 111px}
+.robot-tool-roll{transform-origin:414px 111px}
+.robot-finger-left{transform-origin:390px 100px}
+.robot-finger-right{transform-origin:438px 100px}
+.robot-finger-tip-left{transform-origin:379px 78px}
+.robot-finger-tip-right{transform-origin:449px 78px}
+.robot-finger-thumb{transform-origin:414px 127px}
+.hero-robot.is-ready .robot-build-clip{animation:robotBuild 2.4s linear both;transform-origin:0px 460px}
+.hero-robot.is-ready .robot-build-layers{animation:robotLayerFade 2.4s linear both}
+.hero-robot.is-ready .robot-build-infill{animation:robotInfillFade 2.4s linear both}
+.hero-robot.is-ready .robot-print-detail{animation:robotEdgeFade 2.4s linear both}
+.hero-robot.is-ready .robot-print-rim{animation:robotBuildEdge 2.4s linear both}
+.hero-robot.is-ready .robot-forearm{animation:robotArmFace 1s ease-in-out 2.4s both;transform-origin:246px 217px}
+.hero-robot.is-ready .robot-wrist{animation:robotWristFace 1s ease-in-out 2.4s both;transform-origin:373px 147px}
+.hero-robot.is-ready .robot-tool-yaw{animation:robotToolTurn 1s ease-in-out 2.4s both}
+.hero-robot.is-ready .robot-finger-left{animation:robotFingerLeft .4s ease-out 3.4s both}
+.hero-robot.is-ready .robot-finger-right{animation:robotFingerRight .4s ease-out 3.4s both}
+.hero-robot.is-ready .robot-finger-tip-left{animation:robotTipLeft .4s ease-out 3.4s both}
+.hero-robot.is-ready .robot-finger-tip-right{animation:robotTipRight .4s ease-out 3.4s both}
+.hero-robot.is-ready .robot-finger-thumb{animation:robotThumbOpen .4s ease-out 3.4s both}
+.hero-robot.is-ready .robot-tool-roll{animation:robotToolWave 1.8s ease-in-out 3.8s 2 both}
+.hero-robot.is-ready *{animation-play-state:paused !important}
+.hero-robot.is-ready.is-running *{animation-play-state:running !important}
+@keyframes robotBuild{
+  from{transform:scaleY(0)}99.9%{transform:scaleY(1)}
+  /* Expand into empty space only after printing, giving the greeting full clearance. */
+  to{transform:scaleY(1.4)}
+}
+@keyframes robotBuildEdge{
+  from{transform:translateY(460px)}to{transform:translateY(26px)}
+}
+@keyframes robotLayerFade{0%,7%{opacity:0}12%,88%{opacity:.6}100%{opacity:0}}
+@keyframes robotInfillFade{0%,10%{opacity:0}20%,82%{opacity:.22}100%{opacity:0}}
+@keyframes robotEdgeFade{0%,5%{opacity:0}9%,92%{opacity:.85}100%{opacity:0}}
+@keyframes robotArmFace{from{transform:rotate(0deg)}to{transform:rotate(-2deg)}}
+@keyframes robotWristFace{from{transform:rotate(0deg)}to{transform:rotate(-8deg)}}
+/* A single palm broadens from its oblique projection; it never flips to a different face. */
+@keyframes robotToolTurn{from{transform:scaleX(.6) skewY(-9deg)}to{transform:scaleX(1) skewY(0deg)}}
+@keyframes robotFingerLeft{from{transform:rotate(0deg)}to{transform:rotate(-8deg)}}
+@keyframes robotFingerRight{from{transform:rotate(0deg)}to{transform:rotate(8deg)}}
+@keyframes robotTipLeft{from{transform:rotate(0deg)}to{transform:rotate(5deg)}}
+@keyframes robotTipRight{from{transform:rotate(0deg)}to{transform:rotate(-5deg)}}
+@keyframes robotThumbOpen{from{transform:scaleY(.94)}to{transform:scaleY(1)}}
+/* Roll around the forward-facing tool axis: a 180-degree sweep, then back. */
+@keyframes robotToolWave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-90deg)}75%{transform:rotate(90deg)}}
+@media (min-width:960px){
+  .hero > .hero-grid{max-width:1560px;grid-template-columns:minmax(0,3.2fr) minmax(0,1fr);column-gap:20px;padding-left:calc(var(--gutter) + clamp(0px,calc((100% - var(--maxw)) / 2),120px))}
+  .hero-copy{grid-column:1;grid-row:1}
+  .hero-robot{grid-column:2;grid-row:1 / span 2;width:100%;max-width:430px;margin-top:0;align-self:center}
+  .hero-grid > .hero-scroll{grid-column:1;grid-row:2;justify-self:start}
+}
+@media (max-width:959px){.hero-grid > .hero-scroll{margin-top:24px;justify-self:start}}
+@media (prefers-reduced-motion:reduce){
+  .hero-robot .robot-build-clip{transform:scaleY(1.4) !important;transform-origin:0px 460px}
+  .hero-robot .robot-build-layers,.hero-robot .robot-build-infill,.hero-robot .robot-print-detail{opacity:0 !important}
+  .hero-robot .robot-tool-yaw{transform:none !important}
+  .hero-robot .robot-tool-roll{transform:none !important}
+  .hero-robot .robot-finger-left{transform:rotate(-8deg) !important}
+  .hero-robot .robot-finger-right{transform:rotate(8deg) !important}
+  .hero-robot .robot-finger-tip-left{transform:rotate(5deg) !important}
+  .hero-robot .robot-finger-tip-right{transform:rotate(-5deg) !important}
+  .hero-robot .robot-finger-thumb{transform:none !important}
+  .hero-robot .robot-wrist{transform:rotate(-8deg) !important;transform-origin:373px 147px}
+}
+@media print{.hero-robot{display:none !important}.hero > .hero-grid{display:block}}
 h1.hero-title{
   font-family:var(--display);
   font-weight:700;
@@ -587,11 +663,6 @@ html[data-theme="dark"] .theme-btn .icon-sun{display:block}
   align-items:center;
   position:relative;
 }
-.edu-row::after{
-  content:"";position:absolute;left:0;bottom:-1px;width:0;height:1px;
-  background:var(--brass);transition:width .9s var(--ease-expo);
-}
-.edu-row:hover::after{width:100%}
 @media (min-width:900px){
   /* Text left, diploma right, every row. Source order is left alone so the
      stacking order on phones stays exactly as it was. */
@@ -797,7 +868,7 @@ html[data-theme="dark"] .theme-btn .icon-sun{display:block}
   transform:scaleX(0);
   transform-origin:left;
 }
-.carousel.is-running .feature-progress span{animation:carouselTick 60s linear both}
+.carousel.is-running .feature-progress span{animation:carouselTick 120s linear both}
 @keyframes carouselTick{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
 .slides{position:relative;transition:height .8s cubic-bezier(.22,.65,.3,1)}
@@ -845,7 +916,7 @@ html[data-theme="dark"] .theme-btn .icon-sun{display:block}
 
 .feature .chip{color:rgba(251,251,249,.62)}
 .feature .chip:not(:last-child)::after{color:rgba(251,251,249,.34)}
-.feature .stack{margin-top:26px;padding-top:20px;border-top-color:rgba(251,251,249,.16)}
+.feature .stack{margin-top:0;padding-top:20px;border-top:0}
 
 /* ---- diagram ---- */
 .diagram-wrap{
@@ -908,6 +979,77 @@ html[data-theme="dark"] .theme-btn .icon-sun{display:block}
 .diagram.has-focus .port.hot{opacity:1}
 .diagram.has-focus .node.hot{opacity:1}
 .diagram.has-focus .node.hot .glyph{stroke:var(--brass-lift)}
+
+/* Configs sit beside the topology on desktop and below it on phones. */
+.network-config{margin-top:20px;border-top:1px solid rgba(251,251,249,.14);padding-top:18px;min-width:0}
+.network-config-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.network-config-title{font-family:var(--mono);font-size:.76rem;color:var(--panel-ink)}
+.network-config-select{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:.7rem;color:rgba(251,251,249,.72)}
+.config-picker{position:relative;min-width:0;max-width:100%}
+.config-picker-trigger{display:flex;align-items:center;justify-content:space-between;gap:18px;max-width:100%;padding:9px 12px;border:1px solid rgba(251,251,249,.18);border-radius:12px;background:rgba(251,251,249,.055);color:var(--panel-ink);font:inherit;cursor:pointer;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.config-picker-trigger::after{content:'⌄';color:rgba(251,251,249,.6)}
+.config-picker-trigger:focus-visible,.config-picker-menu button:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(251,251,249,.35)}
+.config-picker-menu{position:absolute;z-index:5;top:calc(100% + 6px);left:0;min-width:100%;padding:5px;border:1px solid rgba(251,251,249,.16);border-radius:14px;background:rgba(30,34,37,.88);backdrop-filter:blur(22px) saturate(120%);-webkit-backdrop-filter:blur(22px) saturate(120%);box-shadow:0 12px 30px rgba(0,0,0,.22)}
+.config-picker-menu[hidden]{display:none}
+.config-picker-menu button{display:block;width:100%;padding:9px 11px;border:0;border-radius:9px;background:transparent;color:rgba(251,251,249,.85);font:inherit;text-align:left;white-space:nowrap;cursor:pointer;transition:color .16s ease,background .16s ease}
+.config-picker-menu button:hover,.config-picker-menu button:focus-visible{color:var(--brass-lift);background:rgba(251,251,249,.055)}
+.config-picker-trigger:hover{color:var(--brass-lift)}
+.network-config-help{margin:10px 0;font-size:.78rem;line-height:1.5;color:rgba(251,251,249,.62)}
+.network-config pre{margin:0;box-sizing:border-box;width:100%;height:300px;overflow:auto;overscroll-behavior:contain;padding:12px;background:rgba(0,0,0,.2);border:1px solid rgba(251,251,249,.14);color:rgba(251,251,249,.88);font: .65rem/1.6 var(--mono);white-space:pre;tab-size:2;text-align:left}
+.network-config code{font:inherit;color:inherit}
+.network-config pre.is-empty{white-space:normal;color:rgba(251,251,249,.6);font: .78rem/1.65 var(--body)}
+.dhcp-view{height:300px;overflow:auto;overscroll-behavior:contain;background:#fff;color:#000;border:1px solid #8c8c96;text-align:left;color-scheme:light}
+.dhcp-view[hidden]{display:none}
+.dhcp-sheet{width:1160px;padding:8px;box-sizing:border-box;font:11px/1.3 Arial,sans-serif}
+.dhcp-title{text-align:center;border-bottom:1px solid #aaa;padding-bottom:5px;margin-bottom:8px}
+.dhcp-fields{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));align-items:center;gap:6px}
+.dhcp-field-label{grid-column:span 5}
+.dhcp-field-value{grid-column:span 10;min-height:20px;padding:2px;border:1px solid #ccc;background:#fff;box-sizing:border-box}
+.dhcp-field-spacer{grid-column:span 5}
+.dhcp-octet-label{grid-column:span 4}
+.dhcp-octet{grid-column:span 4}
+.dhcp-service{grid-column:span 10;display:flex;gap:8px;align-items:center}
+.dhcp-service .dhcp-off{margin-left:230px}
+.dhcp-radio{display:inline-block;width:13px;height:13px;border:1px solid #777;border-radius:50%;vertical-align:middle;margin-right:6px;box-sizing:border-box}
+.dhcp-radio.on{border:4px solid #0671c9}
+.dhcp-interface{grid-column:span 5;display:flex;justify-content:space-between}
+.dhcp-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 6px;text-align:center}
+.dhcp-actions span{border:1px solid #ccc;border-radius:4px;padding:3px;background:#fcfcfc}
+.dhcp-actions span:last-child{color:#888;background:#f8f8f8}
+.dhcp-table-scroll{height:282px;overflow:auto;border:1px solid #8c8c96}
+.dhcp-table{width:100%;border-collapse:collapse;table-layout:fixed;font:inherit;color:#000;background:#fff}
+.dhcp-table th{position:sticky;top:0;z-index:1;background:#fff;height:56px;border-right:1px solid #e2e2e2;text-align:center;font-weight:400;line-height:1.2}
+.dhcp-table td{height:30px;padding:3px;white-space:nowrap;text-align:left}
+.dhcp-expand{border:0;background:transparent;color:var(--panel-ink);font:18px/1 var(--body);cursor:pointer;width:28px;height:28px}
+.dhcp-expand:hover{color:var(--brass-lift)}
+.dhcp-expand[hidden]{display:none}
+.dhcp-dialog{margin:auto;width:1200px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);padding:16px;border:1px solid rgba(251,251,249,.2);border-radius:12px;background:var(--panel);color:var(--panel-ink)}
+.dhcp-dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(5px)}
+.dhcp-dialog-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font: .8rem var(--mono)}
+.dhcp-dialog-close{border:0;background:transparent;color:var(--panel-ink);font:22px/1 var(--body);cursor:pointer;width:28px;height:28px}
+.dhcp-dialog .dhcp-view{height:min(82dvh,760px)}
+.diagram .node.config-selected .glyph{stroke:var(--brass-lift);stroke-width:2.2}
+.network-config-slot{display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;transform:translateX(16px);transition:grid-template-rows .4s ease,opacity .3s ease,transform .4s ease,visibility 0s .4s}
+.network-config-clip{min-height:0;min-width:0;overflow:hidden}
+.is-config-open .network-config-slot{grid-template-rows:1fr;opacity:1;visibility:visible;transform:translateX(0);transition-delay:0s}
+.network-config-close{margin-left:auto;width:28px;height:28px;border:0;background:transparent;color:var(--panel-ink);font:20px/1 var(--body);cursor:pointer;opacity:0;transform:rotate(-45deg) scale(.85);transition:opacity .2s ease,transform .3s ease,color .18s ease}
+.is-config-open .network-config-close{opacity:1;transform:rotate(0) scale(1)}
+.network-config-close:hover{color:var(--brass-lift)}
+.network-config-close:focus-visible{outline:1px solid rgba(251,251,249,.45);outline-offset:2px;border-radius:50%}
+.network-config-head .network-config-select{flex-basis:100%}
+@media (min-width:760px){
+  .diagram-wrap--configs{container-type:inline-size;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0fr);column-gap:0;align-items:center}
+  .diagram-wrap--configs.is-config-open{grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);column-gap:18px}
+  .diagram-wrap--configs .diagram-scroll{min-width:0;align-self:center;overflow:visible}
+  .diagram-wrap--configs .diagram.wide{min-width:0}
+  .diagram-wrap--configs .network-config-slot{min-width:0;overflow:hidden;grid-template-rows:1fr;transition:opacity .35s ease,transform .56s cubic-bezier(.22,1,.36,1),visibility 0s .56s}
+  .diagram-wrap--configs.is-config-open .network-config-slot{transition-delay:0s}
+  .diagram-wrap--configs .network-config{box-sizing:border-box;width:calc((100cqw - 18px) / 2.65);margin-top:0;padding-top:0;padding-left:18px;border-top:0;border-left:1px solid rgba(251,251,249,.14)}
+  .diagram-wrap--configs > .feature-cap{grid-column:1 / -1}
+}
+@media (prefers-reduced-motion:reduce){
+  .diagram-wrap--configs,.diagram-wrap--configs .network-config-slot,.network-config-close{transition:none}
+}
 
 
 
@@ -1095,6 +1237,70 @@ html.anim .shot{opacity:0}
   gap:16px;
 }
 
+/* ---- PLC project: live HMI plate beside the original controller source ---- */
+.plc-project{display:grid;gap:30px;margin-top:clamp(28px,4vw,48px);align-items:stretch}
+.plc-hmi,.plc-source{min-width:0}
+@media (min-width:880px){.plc-project{grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);gap:clamp(22px,2.6vw,36px)}}
+.race-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;margin-bottom:14px;font:.55rem/1.6 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:rgba(251,251,249,.5)}
+.race-live{display:inline-flex;align-items:center;gap:8px}
+.race-live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--brass-lift)}
+.plc-hmi.is-playing .race-live::before{box-shadow:0 0 8px rgba(201,168,103,.6)}
+.race-mode{color:var(--brass-lift)}
+.plc-hmi-link{padding:9px}
+.plc-hmi-link .shot-frame{position:relative;background:transparent}
+.plc-hmi-link img{width:100%;height:auto;object-fit:contain}
+.race-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.race-lamp{opacity:0;mix-blend-mode:screen;transition:opacity .08s linear}
+.race-lamp.is-lit{opacity:1}
+.race-time{fill:#14171A;font:700 19px Arial,sans-serif;font-variant-numeric:tabular-nums;text-anchor:end}
+.race-winner{opacity:0;transition:opacity .2s ease}
+.race-winner.is-winner{opacity:1}
+.plc-hmi .feature-cap{flex-wrap:wrap;line-height:1.6;font-size:.52rem;letter-spacing:.09em;gap:8px}
+.plc-hmi .feature-cap a{color:var(--brass-lift);transition:color .3s var(--ease-expo)}
+.plc-hmi .feature-cap a:hover{color:var(--panel-ink)}
+.race-status{margin-top:22px;min-height:2.8em;font:.78rem/1.6 var(--body);color:rgba(251,251,249,.78)}
+.race-status.is-result{color:var(--gains-lift)}
+.race-status.is-fault{color:var(--losses-lift)}
+.race-note{font:.57rem/1.7 var(--mono);color:rgba(251,251,249,.4);letter-spacing:.035em;max-width:48ch}
+.race-progress{height:1px;background:rgba(251,251,249,.12);overflow:hidden;margin-top:18px}
+.race-progress span{display:block;width:100%;height:100%;background:var(--brass-lift);transform:scaleX(0);transform-origin:left}
+.plc-source{display:flex;flex-direction:column;border-top:1px solid rgba(251,251,249,.2);border-bottom:1px solid rgba(251,251,249,.14);padding-block:16px}
+.source-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}
+.source-title{font-family:var(--display);font-size:clamp(1.08rem,1.4vw,1.3rem);font-weight:500;letter-spacing:-.02em}
+.race-state{font:.56rem/1.6 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--brass-lift);white-space:nowrap}
+.source-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:.58rem;line-height:1.7;letter-spacing:.08em;text-transform:uppercase;color:rgba(251,251,249,.48)}
+.source-note{margin:12px 0 16px;font-size:.76rem;line-height:1.6;color:rgba(251,251,249,.56);max-width:76ch}
+.source-code{height:clamp(300px,28vw,400px);flex:1 1 auto;min-height:300px;max-height:440px;margin:0;overflow:auto;overscroll-behavior:contain;border:1px solid rgba(251,251,249,.14);background:rgba(0,0,0,.18);padding:16px 16px 16px 0;tab-size:4;text-align:left;white-space:normal;color:rgba(251,251,249,.86);font:.65rem/1.8 var(--mono);counter-reset:source-line;color-scheme:dark}
+.source-code code{display:block;width:max-content;min-width:100%;font:inherit}
+.source-line{display:block;min-height:1.8em;white-space:pre;counter-increment:source-line}
+.source-line::before{content:counter(source-line);display:inline-block;width:4.5em;padding-right:1.5em;text-align:right;color:rgba(251,251,249,.26);user-select:none}
+.source-line.is-comment{color:var(--gains-lift)}
+@media (max-width:599px){.source-code{font-size:.62rem}.source-line::before{width:3.5em;padding-right:1em}}
+@media print{.plc-project{display:block}.plc-source,.race-head,.race-status,.race-note,.race-progress,.race-overlay{display:none !important}.plc-hmi-link{max-width:550px;margin-inline:auto}.plc-hmi .feature-cap{color:#555 !important}}
+
+/* ---- Business analytics: concise summary and original submitted graph examples ---- */
+.analytics-project{margin-top:clamp(30px,4vw,48px);min-width:0}
+.analytics-heading{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;margin-bottom:18px}
+.analytics-heading h4{font:500 1.1rem/1.3 var(--display);letter-spacing:-.02em}
+.analytics-heading p{font:.62rem/1.7 var(--mono);color:rgba(251,251,249,.46)}
+.analytics-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid rgba(251,251,249,.2);border-bottom:1px solid rgba(251,251,249,.14);gap:0 24px}
+.analytics-metric{min-width:0;padding:22px 0}
+.analytics-metric:last-child{grid-column:1 / -1}
+.analytics-metric dt{font:.57rem/1.6 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:rgba(251,251,249,.48)}
+.analytics-metric dd{margin:9px 0 7px;font:500 clamp(1.65rem,3vw,2.45rem)/1.05 var(--display);letter-spacing:-.035em;font-variant-numeric:tabular-nums;color:#FBFBF9}
+.analytics-metric p{margin-top:8px;font:.68rem/1.65 var(--body);letter-spacing:normal;color:rgba(251,251,249,.5)}
+.analytics-graphs-heading{margin-top:30px}
+.analytics-graphs{display:grid;gap:22px}
+.analytics-graphs figure{min-width:0}
+.analytics-graph-link{display:block;background:#fff;border:1px solid rgba(251,251,249,.18)}
+.analytics-graph-link:focus-visible,.analytics-graphs figcaption a:focus-visible{outline:2px solid var(--brass-lift);outline-offset:5px}
+.analytics-graph-link img{display:block;width:100%;height:auto}
+.analytics-graphs figcaption{display:flex;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;margin-top:10px;font:.59rem/1.7 var(--mono);color:rgba(251,251,249,.5)}
+.analytics-graphs figcaption a{color:var(--brass-lift)}
+.analytics-note{margin-top:24px;padding-top:18px;border-top:1px solid rgba(251,251,249,.14);font:.7rem/1.75 var(--body);color:rgba(251,251,249,.5);max-width:104ch}
+@media(min-width:880px){.analytics-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.analytics-metric:last-child{grid-column:auto}.analytics-graphs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{.analytics-project,.analytics-project p,.analytics-project h4,.analytics-project dt,.analytics-project dd{color:#222 !important}.analytics-graphs figcaption a{color:#555}}
+
 /* ============================================================
    12. PROJECT CARDS — carousel navigation
    ============================================================ */
@@ -1105,7 +1311,8 @@ html.anim .shot{opacity:0}
   grid-template-columns:1fr;
 }
 @media (min-width:600px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (min-width:1040px){.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:600px) and (max-width:1199px){.grid4 .card:last-child:nth-child(odd){grid-column:1 / -1}}
+@media (min-width:1200px){.grid4{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 .card{
   background:var(--paper);
@@ -1117,9 +1324,9 @@ html.anim .shot{opacity:0}
   min-height:250px;
   transition:background .6s var(--ease-expo),box-shadow .6s var(--ease-expo);
 }
-/* The four cards share one set of row heights, so the eyebrow, the title,
+/* The project cards share one set of row heights, so the eyebrow, the title,
    the body copy and the tech line each start on the same baseline across
-   all four — in every language, however many lines the eyebrow wraps to.
+   every card — in every language, however many lines the eyebrow wraps to.
    Any slack falls to the bottom of the shorter cards. */
 @supports (grid-template-rows: subgrid){
   .grid4{grid-template-rows:repeat(4,auto)}
@@ -1134,7 +1341,7 @@ html.anim .shot{opacity:0}
 
 .card:hover{background:var(--mat);box-shadow:0 0 0 1px var(--ink-38)}
 .card.is-active{background:var(--mat);box-shadow:0 0 0 1px var(--brass)}
-.card-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:auto}
+.card-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 12px;margin-bottom:auto}
 .card .idx{
   font-family:var(--mono);
   font-size:.62rem;
@@ -1690,7 +1897,8 @@ html[data-theme="dark"] body::after{opacity:.07}
 
   <!-- ===================== HERO ===================== -->
   <section class="hero">
-    <div class="shell">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
       <h1 class="hero-title">
         <span class="line"><span data-i18n-html="hero.l1">Engineering adaptable</span></span>
         <span class="line"><span data-i18n-html="hero.l2">solutions across the</span></span>
@@ -1702,6 +1910,187 @@ html[data-theme="dark"] body::after{opacity:.07}
         <p class="hero-sub fade-in" data-i18n="hero.sub">
           A portfolio of work in engineering technology and IT systems
         </p>
+      </div>
+      </div>
+
+      <!-- Decorative, code-only aluminium arm. No text, logos, raster assets or 3D engine. -->
+      <div class="hero-robot" data-hero-robot aria-hidden="true">
+        <svg viewBox="0 0 330 520" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <defs>
+            <linearGradient id="robot-aluminium" x1="0" y1="0" x2="1" y2=".75">
+              <stop stop-color="#FAFBFC"/><stop offset=".3" stop-color="#DDE1E4"/>
+              <stop offset=".65" stop-color="#B8BFC5"/><stop offset="1" stop-color="#909BA4"/>
+            </linearGradient>
+            <linearGradient id="robot-side" x1="0" y1="0" x2="1" y2=".3">
+              <stop stop-color="#A5AEB6"/><stop offset=".5" stop-color="#7D8993"/><stop offset="1" stop-color="#BCC4CA"/>
+            </linearGradient>
+            <linearGradient id="robot-top" x1="0" y1="0" x2="0" y2="1">
+              <stop stop-color="#F6F8F9"/><stop offset="1" stop-color="#C3CBD1"/>
+            </linearGradient>
+            <radialGradient id="robot-joint" cx=".35" cy=".3" r=".75">
+              <stop stop-color="#EFF2F4"/><stop offset=".62" stop-color="#BCC5CC"/>
+              <stop offset=".86" stop-color="#89969F"/><stop offset="1" stop-color="#D8DFE4"/>
+            </radialGradient>
+            <linearGradient id="robot-pad" x1="0" y1="0" x2=".8" y2="1">
+              <stop stop-color="#68737C"/><stop offset=".55" stop-color="#424D57"/><stop offset="1" stop-color="#26323B"/>
+            </linearGradient>
+            <pattern id="robot-layers" width="8" height="4" patternUnits="userSpaceOnUse">
+              <path d="M0 .7H8" stroke="#F6FAFC" stroke-width="1"/>
+              <path d="M0 3.4H8" stroke="#748793" stroke-width=".65"/>
+            </pattern>
+            <pattern id="robot-infill" width="9" height="9" patternUnits="userSpaceOnUse">
+              <path d="m-2 2 9-9m-7 16 9-9m-2 11 9-9" fill="none" stroke="#657E8D" stroke-width=".6"/>
+            </pattern>
+            <clipPath id="robot-build-window" clipPathUnits="userSpaceOnUse">
+              <rect class="robot-build-clip" x="0" y="26" width="560" height="434"/>
+            </clipPath>
+            <clipPath id="robot-surface-outline" clipPathUnits="userSpaceOnUse">
+              <path d="M251 414v29c0 22 124 22 124 0v-29ZM276 365v40c0 19 74 19 74 0v-40Z"/>
+              <ellipse cx="313" cy="414" rx="62" ry="18"/>
+              <path d="M277 379 268 346 282 320 316 313 343 335 350 375c-21 13-49 14-73 4Z"/>
+              <path d="M280 346 221 235 232 210 254 207 276 223 328 330 316 348Zm-35-151 106-73c13-9 25 0 30 16l2 8c2 9-4 17-14 23l-94 68-25-15Z"/>
+              <circle cx="313" cy="344" r="35"/><circle cx="246" cy="217" r="36"/>
+              <circle cx="373" cy="147" r="25"/>
+              <path d="m376 129 24-23 22 19-24 26-17-6Z"/>
+              <g transform="translate(414 111) scale(.6 1) skewY(-9) scale(.9) translate(-414 -111)">
+                <circle cx="414" cy="111" r="26"/>
+                <rect x="380" y="87" width="68" height="50" rx="13"/>
+                <path d="M392 101 381 99 370 84V74l12-7 15 21 4 8Zm44 0 11-2 11-15V74l-12-7-15 21-4 8Z"/>
+                <path d="M371 79 362 65 368 47 380 35 389 34 397 42 396 63 384 82Zm86 0 9-14-6-18-12-12-9-1-8 8 1 21 12 19Z"/>
+                <path d="M405 124h18l6 13-2 18-7 7h-12l-7-7-2-18Z"/>
+              </g>
+            </clipPath>
+          </defs>
+
+          <g transform="translate(-170 0)">
+          <!-- A quiet isometric print bed grounds the arm without a box around the artwork. -->
+          <path class="robot-bed-side" d="M190 444 328 479 474 442v8L328 487 190 452Z" stroke-width="1"/>
+          <path class="robot-bed" d="M190 444 336 407 474 442 328 479Z" stroke-width="1"/>
+          <g class="robot-guide" stroke-width=".65" opacity=".55">
+            <path d="m227 435 138 35m-101-44 138 35m-101-44 138 35"/>
+            <path d="m224 453 146-37m-111 46 146-37m-111 46 146-37"/>
+          </g>
+          <ellipse cx="311" cy="448" rx="81" ry="21" fill="#1B252D" opacity=".08"/>
+
+          <g clip-path="url(#robot-build-window)">
+            <!-- Base casting and rotary waist. -->
+            <path d="M251 414v29c0 22 124 22 124 0v-29Z" fill="url(#robot-side)" stroke="#83919B" stroke-width="1.1"/>
+            <ellipse cx="313" cy="414" rx="62" ry="18" fill="url(#robot-top)" stroke="#A2AEB7" stroke-width="1.1"/>
+            <path d="M257 437c25 13 87 13 112 0" fill="none" stroke="#D9DFE3" stroke-width="1.2"/>
+            <g fill="#75848F" stroke="#E7EBEE" stroke-width="1">
+              <ellipse cx="270" cy="415" rx="4" ry="2.5"/><ellipse cx="311" cy="402" rx="4" ry="2.5"/>
+              <ellipse cx="355" cy="415" rx="4" ry="2.5"/><ellipse cx="313" cy="427" rx="4" ry="2.5"/>
+            </g>
+            <path d="M276 365v40c0 19 74 19 74 0v-40Z" fill="url(#robot-aluminium)" stroke="#91A0AA" stroke-width="1.2"/>
+            <ellipse cx="313" cy="365" rx="37" ry="12" fill="url(#robot-top)" stroke="#A1ADB6"/>
+            <path d="M282 398c20 9 44 9 62 0" fill="none" stroke="#8E9DA7" stroke-width="1.2"/>
+            <path d="M277 379 268 346 282 320 316 313 343 335 350 375c-21 13-49 14-73 4Z" fill="url(#robot-side)" stroke="#87959F" stroke-width="1.2"/>
+            <!-- Shoulder rings share the base's x=313 axis. -->
+            <circle cx="313" cy="344" r="35" fill="url(#robot-side)" stroke="#7C8B96"/>
+
+            <!-- Shoulder, long upper arm and sealed joint covers. -->
+            <path d="M292 351 226 239 235 213 263 205 284 223 340 332 323 357Z" fill="url(#robot-side)" stroke="#7E8E99" stroke-width="1.4"/>
+            <path d="M280 346 221 235 232 210 254 207 276 223 328 330 316 348Z" fill="url(#robot-aluminium)" stroke="#9AA7B0" stroke-width="1.4"/>
+            <path d="M233 231 287 331 302 336 250 228Z" fill="#E9EDF0" opacity=".65"/>
+            <path d="M250 245 295 324" stroke="#A5B1B9" stroke-width="1.3"/>
+            <circle cx="313" cy="344" r="31" fill="url(#robot-joint)" stroke="#8C9AA5" stroke-width="1.5"/>
+            <circle cx="313" cy="344" r="22" fill="url(#robot-aluminium)" stroke="#B1BCC4" stroke-width="1.2"/>
+            <circle cx="313" cy="344" r="8" fill="#8999A5" stroke="#D6DEE4" stroke-width="1.5"/>
+            <g fill="#7D8D99"><circle cx="297" cy="334" r="2.2"/><circle cx="329" cy="334" r="2.2"/><circle cx="313" cy="364" r="2.2"/></g>
+
+            <g class="robot-forearm">
+              <!-- Routed service cable and the forearm's chamfered shell. -->
+              <path d="M314 323c35-43-10-63-35-91-20-23 16-56 59-74" fill="none" stroke="#77858F" stroke-width="10" stroke-linecap="round"/>
+              <path d="M314 323c35-43-10-63-35-91-20-23 16-56 59-74" fill="none" stroke="#BAC4CB" stroke-width="3" stroke-linecap="round"/>
+              <path d="m255 202 106-78 23 11 8 23-17 20-99 65-21-15Z" fill="url(#robot-side)" stroke="#7F8E99" stroke-width="1.3"/>
+              <path d="m245 195 106-73c13-9 25 0 30 16l2 8c2 9-4 17-14 23l-94 68-25-15Z" fill="url(#robot-aluminium)" stroke="#9AA8B2" stroke-width="1.4"/>
+              <path d="m271 203 81-58 13 3-86 64Z" fill="#F0F3F5" opacity=".72"/>
+              <path d="m283 216 77-54" fill="none" stroke="#9BAAB4" stroke-width="1.2"/>
+              <!-- The elbow rim, cover and animated forearm use the same (246,217) pivot. -->
+              <circle cx="246" cy="217" r="36" fill="url(#robot-side)" stroke="#8796A1"/>
+              <circle cx="246" cy="217" r="32" fill="url(#robot-joint)" stroke="#929FAA" stroke-width="1.4"/>
+              <circle cx="246" cy="217" r="22" fill="url(#robot-top)" stroke="#A6B2BC"/>
+              <circle cx="246" cy="217" r="9" fill="#8999A6" stroke="#E1E7EC" stroke-width="1.5"/>
+              <g fill="#81919E"><circle cx="230" cy="207" r="2.2"/><circle cx="262" cy="207" r="2.2"/><circle cx="246" cy="237" r="2.2"/></g>
+              <circle cx="373" cy="147" r="25" fill="url(#robot-joint)" stroke="#8F9DA8" stroke-width="1.4"/>
+              <circle cx="373" cy="147" r="16" fill="url(#robot-aluminium)" stroke="#B5C0C8"/>
+
+              <!-- All palm, fingertip, bevel and flange surfaces share the same forward-axis roll. -->
+              <g class="robot-wrist">
+                <path d="m376 129 24-23 22 19-24 26-17-6Z" fill="url(#robot-side)" stroke="#8796A2" stroke-width="1.2"/>
+                <path d="m376 129 22-20 15 12-24 25Z" fill="url(#robot-aluminium)" stroke="#A3AFB9"/>
+                <g class="robot-tool-roll">
+                <g class="robot-tool-yaw">
+                <g class="robot-hand-geometry" transform="translate(414 111) scale(.9) translate(-414 -111)">
+                <g class="robot-tool-front">
+                  <circle cx="414" cy="111" r="26" fill="url(#robot-joint)" stroke="#8B9DAA" stroke-width="1.2"/>
+                  <circle cx="414" cy="111" r="20" fill="url(#robot-top)" stroke="#B4C0C9"/>
+                  <rect x="380" y="87" width="68" height="50" rx="13" fill="url(#robot-side)" stroke="#8395A2" stroke-width="1.3"/>
+                  <g class="robot-finger-left">
+                    <path d="M392 101 381 99 370 84V74l12-7 15 21 4 8Z" fill="url(#robot-aluminium)" stroke="#8397A6" stroke-width="1.2"/>
+                    <path d="m370 84 4 8 11 13 7-4-11-2Z" fill="url(#robot-side)" stroke="#8397A6"/>
+                    <circle cx="379" cy="78" r="9" fill="url(#robot-joint)" stroke="#7D909E" stroke-width="1.2"/>
+                    <g class="robot-finger-tip-left">
+                      <path d="M371 79 362 65 368 47 380 35 389 34 397 42 396 63 384 82Z" fill="url(#robot-aluminium)" stroke="#7C909F" stroke-width="1.25" stroke-linejoin="round"/>
+                      <path d="m383 38 8-1 5 6-1 19-11 18-11-6 2-16Z" fill="url(#robot-pad)" stroke="#344650" stroke-width="1.1"/>
+                      <path d="m378 54 7-12h5l1 17-9 14-7-3Z" fill="#5F6C76"/>
+                      <path d="m366 62 7-16 10-8-5 15-8 15Z" fill="url(#robot-top)"/>
+                      <path d="m367 63 8 9 8 4" fill="none" stroke="#E6EDF2" stroke-width="1.1"/>
+                    </g>
+                    <circle cx="379" cy="78" r="4" fill="#344650" stroke="#C2CDD5" stroke-width="1"/>
+                    <path d="M376.5 78h5M379 75.5v5" stroke="#8C9DA9" stroke-width=".8"/>
+                  </g>
+                  <g class="robot-finger-right">
+                    <path d="M436 101 447 99 458 84V74l-12-7-15 21-4 8Z" fill="url(#robot-aluminium)" stroke="#8397A6" stroke-width="1.2"/>
+                    <path d="m458 84-4 8-11 13-7-4 11-2Z" fill="url(#robot-side)" stroke="#8397A6"/>
+                    <circle cx="449" cy="78" r="9" fill="url(#robot-joint)" stroke="#7D909E" stroke-width="1.2"/>
+                    <g class="robot-finger-tip-right">
+                      <path d="M457 79 466 65 460 47 448 35 439 34 431 42 432 63 444 82Z" fill="url(#robot-aluminium)" stroke="#7C909F" stroke-width="1.25" stroke-linejoin="round"/>
+                      <path d="m445 38-8-1-5 6 1 19 11 18 11-6-2-16Z" fill="url(#robot-pad)" stroke="#344650" stroke-width="1.1"/>
+                      <path d="m450 54-7-12h-5l-1 17 9 14 7-3Z" fill="#5F6C76"/>
+                      <path d="m462 62-7-16-10-8 5 15 8 15Z" fill="url(#robot-top)"/>
+                      <path d="m461 63-8 9-8 4" fill="none" stroke="#E6EDF2" stroke-width="1.1"/>
+                    </g>
+                    <circle cx="449" cy="78" r="4" fill="#344650" stroke="#C2CDD5" stroke-width="1"/>
+                    <path d="M446.5 78h5M449 75.5v5" stroke="#8C9DA9" stroke-width=".8"/>
+                  </g>
+                  <rect x="385" y="93" width="58" height="36" rx="6" fill="url(#robot-aluminium)" stroke="#91A3B0" stroke-width="1.3"/>
+                  <rect x="389" y="97" width="50" height="28" rx="4" fill="url(#robot-top)" stroke="#B1BEC8"/>
+                  <path d="M414 100v21M397 111h34" fill="none" stroke="#98A9B5" stroke-width="1.1"/>
+                  <g fill="#344650" stroke="#E5EDF3" stroke-width=".8">
+                    <circle cx="394" cy="102" r="2.1"/><circle cx="434" cy="102" r="2.1"/>
+                    <circle cx="394" cy="120" r="2.1"/><circle cx="434" cy="120" r="2.1"/>
+                  </g>
+                  <g class="robot-finger-thumb">
+                    <path d="M405 124h18l6 13-2 18-7 7h-12l-7-7-2-18Z" fill="url(#robot-aluminium)" stroke="#7D929F" stroke-width="1.2" stroke-linejoin="round"/>
+                    <path d="m405 127-6 10 2 18 7 7-3-17Z" fill="url(#robot-side)"/>
+                    <path d="m423 127 6 10-2 18-7 7 3-17Z" fill="url(#robot-side)"/>
+                    <rect x="405" y="138" width="18" height="22" rx="4" fill="url(#robot-pad)" stroke="#344650" stroke-width="1.1"/>
+                    <path d="M408 140h12v8h-12Z" fill="#626F79"/>
+                    <path d="M407 134v-5h14v5" fill="none" stroke="#ECF2F6" stroke-width="1.5"/>
+                  </g>
+                </g>
+                </g>
+                </g>
+                </g>
+              </g>
+            </g>
+
+            <g clip-path="url(#robot-surface-outline)">
+              <rect class="robot-build-layers" x="185" y="26" width="300" height="434" fill="url(#robot-layers)"/>
+              <rect class="robot-build-infill" x="185" y="26" width="300" height="434" fill="url(#robot-infill)"/>
+            </g>
+          </g>
+
+          <!-- Freshly deposited solid layer edge is confined to the actual robot surface. -->
+          <g class="robot-print-detail" clip-path="url(#robot-surface-outline)">
+            <g class="robot-print-rim">
+              <rect x="185" y="-3" width="300" height="4" fill="#EFF7FC"/>
+              <rect x="185" y="1" width="300" height=".8" fill="#8499A8"/>
+            </g>
+          </g>
+          </g>
+        </svg>
       </div>
 
       <a class="hero-scroll fade-in" href="#about">
@@ -1958,7 +2347,7 @@ html[data-theme="dark"] body::after{opacity:.07}
     <div class="shell">
       <div class="sec-head" data-reveal>
         <span class="mono" data-i18n="proj.label">Projects</span>
-        <span class="mono count" data-i18n="proj.count">Four builds · 2023 — 2025</span>
+        <span class="mono count" data-i18n="proj.count">Six applied projects</span>
       </div>
 
       <div class="carousel" data-carousel data-lens>
@@ -2001,6 +2390,24 @@ html[data-theme="dark"] body::after{opacity:.07}
             <h3 data-i18n="p4.card">Cleanroom Semiconductor Production</h3>
             <p data-i18n="p4.cardbody">Wafer patterning at Kent State's cleanroom — photolithography, reactive ion etching, and atomic layer deposition.</p>
             <span class="tech" data-i18n-html="p4.tech">Photolithography · RIE · ALD<br>Cleanroom protocol · Metrology</span>
+          </button>
+          <button type="button" class="card" data-goto="4" role="tab" aria-selected="false">
+            <span class="card-top">
+              <span class="idx" data-i18n="p5.idx">PLC programming · Class project</span>
+              <span class="now" data-i18n="proj.now">Now showing</span>
+            </span>
+            <h3 data-i18n="p5.card">Drag Race Controller</h3>
+            <p data-i18n="p5.cardbody">A two-player drag race on a Rockwell PLC — dual start modes, independent timing, and false-start detection.</p>
+            <span class="tech" data-i18n-html="p5.tech">Studio 5000 · Structured Text<br>Rockwell PLC · HMI · Digital I/O</span>
+          </button>
+          <button type="button" class="card" data-goto="5" role="tab" aria-selected="false">
+            <span class="card-top">
+              <span class="idx" data-i18n="p6.idx">Business Analytics · April 2026</span>
+              <span class="now" data-i18n="proj.now">Now showing</span>
+            </span>
+            <h3 data-i18n="p6.card">Employee Analytics</h3>
+            <p data-i18n="p6.cardbody">Salary prediction and performance classification in R, with original plots and results from a held-out test set.</p>
+            <span class="tech" data-i18n-html="p6.tech">R · R Markdown · ggplot2<br>Linear regression · rpart · caret</span>
           </button>
         </div>
 
@@ -2190,12 +2597,288 @@ html[data-theme="dark"] body::after{opacity:.07}
 
 </main>
 
+<script type="text/plain" id="drag-race-source">
+// PROJECT:      INDEPENDENT TWO-PLAYER DRAG RACE CONTROLLER
+// ==========================================================================================
+
+SW_Car1_Ready := Local:1:I.Data.0; // P1 Stage Switch
+SW_Car2_Ready := Local:1:I.Data.1; // P2 Stage Switch
+SW_ProTree    := Local:1:I.Data.7; // Pro-Tree Mode Switch
+
+PB_Racer1_OS := PB10 AND NOT PB_Racer1_Last; // P1 Finish/Stop Button
+PB_Racer2_OS := PB11 AND NOT PB_Racer2_Last; // P2 Finish/Stop Button
+PB_Reset_OS  := PB12 AND NOT PB_Reset_Last;  // Restart/Reset Button
+
+IF PB_Reset_OS THEN
+    Seq_State := 0;
+    P1_Fault := 0;
+    P2_Fault := 0;
+    Player1_Finished := 0;
+    Player2_Finished := 0;
+    Player1_Time := 0.0;
+    Player2_Time := 0.0;
+END_IF;
+
+
+//MASTER SEQUENCE CONTROLLER
+
+CASE Seq_State OF
+    0: // IDLE & WAITING FOR STAGING
+        WAIT_TIMER.Reset := 1;
+        TREE_TIMER.Reset := 1;
+        RACE_TIMER1.Reset := 1;
+        RACE_TIMER2.Reset := 1;
+
+        // Only start sequence if BOTH are ready
+        IF SW_Car1_Ready AND SW_Car2_Ready THEN
+            Seq_State := 1;
+            WAIT_TIMER.Reset := 1; 
+
+            // Generate pseudo-random wait between 1000ms and 2000ms.
+            // Samples the continuously running BLINK_TIMER at the exact ms the switch is hit.
+            WAIT_TIMER.PRE := 1000 + BLINK_TIMER.ACC; 
+        END_IF;
+
+    1: // RANDOM WAIT (1 - 2 SECONDS)
+        WAIT_TIMER.Reset := 0;
+        WAIT_TIMER.TimerEnable := 1;
+
+        IF WAIT_TIMER.DN THEN
+            Seq_State := 2;
+            TREE_TIMER.Reset := 1; 
+        END_IF;
+
+    2: // CHRISTMAS TREE DROP
+        TREE_TIMER.Reset := 0;
+
+        // Set tree time based on Pro Tree or Sportsman mode
+        IF SW_ProTree THEN
+            TREE_TIMER.PRE := 500;  // Pro Tree: Only 500ms total wait
+        ELSE
+            TREE_TIMER.PRE := 1500; // Sportsman: 3 stages x 500ms
+        END_IF;
+
+        TREE_TIMER.TimerEnable := 1;
+
+        IF TREE_TIMER.DN THEN
+            Seq_State := 3;
+            RACE_TIMER1.Reset := 1; 
+            RACE_TIMER2.Reset := 1;
+        END_IF;
+
+    3: // GREEN GO! (RACING)
+        RACE_TIMER1.Reset := 0;
+        RACE_TIMER2.Reset := 0;
+        RACE_TIMER1.PRE := 999999;
+        RACE_TIMER2.PRE := 999999;
+
+        // Timers run until the specific player finishes or faults
+        RACE_TIMER1.TimerEnable := NOT Player1_Finished AND NOT P1_Fault;
+        RACE_TIMER2.TimerEnable := NOT Player2_Finished AND NOT P2_Fault;
+END_CASE;
+
+
+//PLAYER 1 INDEPENDENT LOGIC
+
+// Reset internal output commands every scan
+Set_P1_Lamp := 0; Blink1_P1 := 0; Blink2_P1 := 0; Blink3_P1 := 0; Green_Go_P1 := 0; Red_Lamp_P1 := 0;
+
+// Jump the Gun Detection (Before Green)
+IF (Seq_State = 1 OR Seq_State = 2) AND PB_Racer1_OS AND NOT P1_Fault THEN
+    P1_Fault := 1;
+    Player1_Time := 0.0;
+END_IF;
+
+// Valid Finish Detection (After Green)
+IF Seq_State = 3 AND PB_Racer1_OS AND NOT P1_Fault AND NOT Player1_Finished THEN
+    Player1_Finished := 1;
+    Player1_Time := RACE_TIMER1.ACC / 1000.0; // Record Time
+END_IF;
+
+// Light Generation
+IF P1_Fault THEN
+    Red_Lamp_P1 := 1; // Only Red on fault
+ELSIF Player1_Finished THEN
+    Set_P1_Lamp := 1; 
+    Green_Go_P1 := 1; 
+    Blink3_P1 := Blink_Pulse; // Win indication flashes
+ELSE
+    // Normal sequence follows the master sequence
+    IF Seq_State = 0 THEN
+        Set_P1_Lamp := SW_Car1_Ready;
+    ELSIF Seq_State = 1 THEN
+        Set_P1_Lamp := 1;
+    ELSIF Seq_State = 2 THEN
+        Set_P1_Lamp := 1;
+
+        // Tree Logic Selection
+        IF SW_ProTree THEN
+            // Pro Tree: All blink lights on simultaneously
+            Blink1_P1 := 1;
+            Blink2_P1 := 1;
+            Blink3_P1 := 1;
+        ELSE
+            // Sportsman: Drops down every 500ms
+            IF TREE_TIMER.ACC < 500 THEN
+                Blink1_P1 := 1;
+            ELSIF TREE_TIMER.ACC < 1000 THEN
+                Blink2_P1 := 1;
+            ELSIF TREE_TIMER.ACC < 1500 THEN
+                Blink3_P1 := 1;
+            END_IF;
+        END_IF;
+
+    ELSIF Seq_State = 3 THEN
+        Set_P1_Lamp := 1;
+        Green_Go_P1 := 1;
+    END_IF;
+END_IF;
+
+
+// PLAYER 2 INDEPENDENT LOGIC
+
+// Reset internal output commands every scan
+Set_P2_Lamp := 0; Blink1_P2 := 0; Blink2_P2 := 0; Blink3_P2 := 0; Green_Go_P2 := 0; Red_Lamp_P2 := 0;
+
+// Jump the Gun Detection (Before Green)
+IF (Seq_State = 1 OR Seq_State = 2) AND PB_Racer2_OS AND NOT P2_Fault THEN
+    P2_Fault := 1;
+    Player2_Time := 0.0;
+END_IF;
+
+// Valid Finish Detection (After Green)
+IF Seq_State = 3 AND PB_Racer2_OS AND NOT P2_Fault AND NOT Player2_Finished THEN
+    Player2_Finished := 1;
+    Player2_Time := RACE_TIMER2.ACC / 1000.0; // Record Time
+END_IF;
+
+// Light Generation
+IF P2_Fault THEN
+    Red_Lamp_P2 := 1; // Only Red on fault
+ELSIF Player2_Finished THEN
+    Set_P2_Lamp := 1;
+    Green_Go_P2 := 1;
+    Blink3_P2 := Blink_Pulse; // Win indication flashes
+ELSE
+    // Normal sequence follows the master sequence
+    IF Seq_State = 0 THEN
+        Set_P2_Lamp := SW_Car2_Ready;
+    ELSIF Seq_State = 1 THEN
+        Set_P2_Lamp := 1;
+    ELSIF Seq_State = 2 THEN
+        Set_P2_Lamp := 1;
+
+        // Tree Logic Selection
+        IF SW_ProTree THEN
+            // Pro Tree: All blink lights on simultaneously
+            Blink1_P2 := 1;
+            Blink2_P2 := 1;
+            Blink3_P2 := 1;
+        ELSE
+            // Sportsman: Drops down every 500ms
+            IF TREE_TIMER.ACC < 500 THEN
+                Blink1_P2 := 1;
+            ELSIF TREE_TIMER.ACC < 1000 THEN
+                Blink2_P2 := 1;
+            ELSIF TREE_TIMER.ACC < 1500 THEN
+                Blink3_P2 := 1;
+            END_IF;
+        END_IF;
+    ELSIF Seq_State = 3 THEN
+        Set_P2_Lamp := 1;
+        Green_Go_P2 := 1;
+    END_IF;
+END_IF;
+
+
+//EXECUTE TIMERS
+
+TONR(WAIT_TIMER);
+TONR(TREE_TIMER);
+TONR(RACE_TIMER1);
+TONR(RACE_TIMER2);
+
+// Pulse Generator for the Win Lights (500ms On/Off) - Runs Continuously
+IF BLINK_TIMER.DN THEN
+    BLINK_TIMER.Reset := 1;
+ELSE
+    BLINK_TIMER.Reset := 0;
+END_IF;
+BLINK_TIMER.PRE := 1000;
+BLINK_TIMER.TimerEnable := 1;
+TONR(BLINK_TIMER); 
+Blink_Pulse := (BLINK_TIMER.ACC < 500);
+
+
+// PHYSICAL OUTPUT MAPPING
+
+// Independent Red Lights (Jump the Gun / False Start)
+Local:2:O.Data.2 := Red_Lamp_P1;
+Local:2:O.Data.8 := Red_Lamp_P2;
+
+// Standard Tree Logic
+Local:2:O.Data.11 := Blink1_P2;
+Local:2:O.Data.5 := Blink1_P1;
+Local:2:O.Data.10 := Blink2_P2;
+Local:2:O.Data.4 := Blink2_P1;
+Local:2:O.Data.3 := Blink3_P1;
+Local:2:O.Data.9 := Blink3_P2;
+
+// Staging (Ready) Lamps
+Local:2:O.Data.1 := Set_P1_Lamp;
+Local:2:O.Data.7 := Set_P2_Lamp;
+
+// Winner / Green Lamps
+Local:2:O.Data.0 := Green_Go_P1;
+Local:2:O.Data.6 := Green_Go_P2;
+
+
+// UPDATE EDGE MEMORY FOR NEXT SCAN
+
+// Updates memory variables with directly read physical input data.
+PB_Racer1_Last := PB10;
+PB_Racer2_Last := PB11;
+PB_Reset_Last  := PB12;
+</script>
+
 <script>
 /* ============================================================
    TRANSLATIONS — edit copy here, in one place, for both languages
    ============================================================ */
 window.I18N = {
   en: {
+    "p6.idx": "Business Analytics · April 2026",
+    "p6.card": "Employee Analytics",
+    "p6.cardbody": "Salary prediction and performance classification in R, with original plots and results from a held-out test set.",
+    "p6.tech": "R · R Markdown · ggplot2<br>Linear regression · rpart · caret",
+    "p6.eyebrow": "Business Analytics · Group final project · April 2026",
+    "p6.title": "Salary and performance, evaluated with R.",
+    "p6.b1": "Kyle Bartlett and I jointly developed the full analysis for our Business Analytics final project. Using a classroom employee dataset, we studied two prediction tasks: estimating salary and classifying performance as normal or high.",
+    "p6.b2": "We checked for missing values, prepared categorical factors, and explored relationships with ggplot2. A reproducible 80/20 split (seed 123) reserved 560 records for training and 140 for testing. We compared linear regression with an rpart regression tree for salary and used a classification tree for performance. The selected plots below are original output from our submitted R analysis.",
+    "p6.k1": "Team",
+    "p6.v1": "Gustavo Gasperin · Kyle Bartlett",
+    "p6.k2": "Dataset",
+    "p6.v2": "700 records · 13 variables",
+    "p6.k3": "Evaluation",
+    "p6.v3": "560 training · 140 test records",
+    "p6.k4": "My contribution",
+    "p6.v4": "Joint development of the full analysis",
+    "p6.results.title": "Results on held-out data",
+    "p6.results.note": "Reported results on the 140-record test set.",
+    "p6.metric.rmse": "Salary RMSE",
+    "p6.metric.accuracy": "Classification accuracy",
+    "p6.metric.recall": "High-performance recall",
+    "p6.metric.linear": "Linear regression · reported test error",
+    "p6.metric.correct": "131 / 140 correct · 81.43% majority-class baseline",
+    "p6.metric.detected": "22 / 26 high performers detected",
+    "p6.graphs.title": "Selected original R plots",
+    "p6.graphs.salary": "Salary and experience, by department",
+    "p6.graphs.performance": "Performance classification tree",
+    "p6.graphs.salaryAlt": "Original ggplot2 scatter plot of salary versus years of experience, colored by department",
+    "p6.graphs.performanceAlt": "Original classification tree for normal and high performance, showing splits and predicted classes",
+    "p6.graphs.note": "Original output from the submitted R analysis, in English.",
+    "p6.graphs.zoom": "Open full-size image",
+    "p6.limits.note": "Academic classroom data: all 700 records were retained, including 39 with experience greater than age. Results describe one held-out split; associations do not establish causation or real-world employee performance.",
     'meta.title': 'Gustavo Gasperin — Engineering Portfolio',
     'meta.desc': 'Gustavo Gasperin — Technology Administration Graduate Assistant and M.E.T. candidate at Kent State University. Enterprise IT, networking, and embedded systems.',
 
@@ -2292,7 +2975,7 @@ window.I18N = {
 
 
     'proj.label': 'Projects',
-    'proj.count': 'Four builds · 2023 — 2025',
+    'proj.count': "Six applied projects",
     'proj.now': 'Now showing',
     'proj.hint': 'Hover a node to isolate it',
 
@@ -2306,6 +2989,13 @@ window.I18N = {
     'p1.k3': 'Built in', 'p1.v3': 'Cisco Packet Tracer',
     'p1.k4': 'Addressing', 'p1.v4': 'IPv4 / IPv6 dual stack',
     'p1.figcap': 'Fig. 01 — Campus core; remote-site links in red',
+    'p1.config.title': 'Running configuration',
+    'p1.config.device': 'Device',
+    'p1.config.choose': 'Select a device',
+    'p1.config.close': 'Close configuration',
+    'p1.config.expandDhcp': 'Expand DHCP view',
+    'p1.config.help': 'Click any map object to open this panel. Explore the configuration examples using the device menu above.',
+    'p1.config.empty': 'Please select a device from the menu above to explore the available configuration examples.',
     'p1.idx': 'Networking II · Capstone',
     'p1.card': 'Enterprise Network Build',
     'p1.cardbody': "A mid-sized enterprise network for 1,000+ users — three campus buildings, two remote sites, redundant core.",
@@ -2313,6 +3003,43 @@ window.I18N = {
  'p2.v1': 'Arduino Mega 2560', 'p2.v2': 'Pressure plate per slot', 'p2.v3': 'Keypad + per-user rules', 'p2.v4': 'Servo release · LCD 16x2',
  'p3.v1': 'Arduino Uno R3', 'p3.v2': 'Sensors on hardware interrupts', 'p3.v3': 'Lighting logic · driver feedback', 'p3.v4': 'C · breadboard circuits',
  'p4.v1': 'Intel', 'p4.v2': 'Cleanroom protocol', 'p4.v3': 'Litho · etch · metrology',
+
+    "p5.idx": "PLC programming · Class project",
+    "p5.card": "Drag Race Controller",
+    "p5.cardbody": "A two-player drag race on a Rockwell PLC — dual start modes, independent timing, and false-start detection.",
+    "p5.tech": "Studio 5000 · Structured Text<br>Rockwell PLC · HMI · Digital I/O",
+    "p5.eyebrow": "Industrial automation · PLC class project",
+    "p5.title": "Two lanes. One PLC. Every scan counts.",
+    "p5.b1": "I programmed a two-player drag race simulator in Studio 5000 using Structured Text, a Rockwell PLC, and an HMI. A four-state controller coordinates staging, a variable wait, the starting light sequence, and racing. Both players must be in position before the sequence begins; the HMI presents a separate starting tree, staging indicator, false-start lamp, and time display for each lane.",
+    "p5.b2": "The staging delay is approximately 1–2 seconds, calculated by sampling a continuously running timer. A physical mode switch selects a Sportsman tree, with three successive 500 ms amber stages, or a Pro Tree, with all three ambers illuminated together for 500 ms before green. TONR timer instructions drive the sequence and the two independent race timers.",
+    "p5.b3": "Rising-edge detection turns each pushbutton press into a single event. A press before green latches a false-start fault for that player; a valid press after green freezes that lane’s elapsed time in seconds. The other lane continues independently. Finished lanes retain green and flash an amber lamp, while a reset clears both results and faults. Physical inputs and outputs connect the program to the staging switches and lamps.",
+    "p5.k1": "Platform",
+    "p5.v1": "Studio 5000 · Rockwell PLC + HMI",
+    "p5.k2": "Program",
+    "p5.v2": "Structured Text · 4-state sequence",
+    "p5.k3": "Start modes",
+    "p5.v3": "Sportsman 1.5 s · Pro Tree 0.5 s",
+    "p5.k4": "Per lane",
+    "p5.v4": "Elapsed time · False-start fault",
+    "p5.ph1": "Drag race HMI with two player time displays, staging indicators, three amber lamps, a red false-start lamp, and a green GO lamp per lane",
+    "p5.figcap": "Rockwell HMI · Two-player race screen",
+    "p5.zoom": "Open full size ↗",
+    "p5.demo.label": "HMI playback",
+    "p5.demo.note": "Illustrative race · Simulated times and result.",
+    "p5.demo.winner": "WINNER",
+    "p5.demo.state": "State",
+    "p5.demo.staging": "Staging · Waiting for both players",
+    "p5.demo.wait": "Both players ready · Variable staging hold",
+    "p5.demo.tree": "Starting tree · Stand by",
+    "p5.demo.racing": "Green · Independent lane timers running",
+    "p5.demo.finished": "Player {player} finished · Other lane running",
+    "p5.demo.foul": "Player {player} false start · Other lane continues",
+    "p5.demo.result": "Player {player} wins · {time} s",
+    "p5.demo.reset": "Reset · Staging the next race",
+    "p5.source.title": "Structured Text",
+    "p5.source.meta": "Original controller program · Studio 5000",
+    "p5.source.label": "Drag race controller Structured Text source code",
+    "p5.source.note": "Four-state sequencing, independent lane timers, and direct physical I/O mapping.",
 
     'proj.zoom': 'Click to enlarge',
 
@@ -2429,6 +3156,38 @@ window.I18N = {
   },
 
   pt: {
+    "p6.idx": "Business Analytics · Abril de 2026",
+    "p6.card": "Análise de Funcionários",
+    "p6.cardbody": "Previsão salarial e classificação de desempenho em R, com gráficos originais e resultados em dados de teste.",
+    "p6.tech": "R · R Markdown · ggplot2<br>Regressão linear · rpart · caret",
+    "p6.eyebrow": "Business Analytics · Projeto final em grupo · Abril de 2026",
+    "p6.title": "Salário e desempenho, avaliados com R.",
+    "p6.b1": "Kyle Bartlett e eu desenvolvemos juntos toda a análise do nosso projeto final de Business Analytics. Com uma base didática de funcionários, estudamos duas tarefas preditivas: estimar o salário e classificar o desempenho como normal ou alto.",
+    "p6.b2": "Verificamos valores ausentes, preparamos fatores categóricos e exploramos relações com ggplot2. Uma divisão reproduzível de 80/20 (semente 123) reservou 560 registros para treinamento e 140 para teste. Comparamos regressão linear e uma árvore de regressão rpart para salário e usamos uma árvore de classificação para desempenho. Os gráficos selecionados abaixo são resultados originais da análise entregue em R.",
+    "p6.k1": "Equipe",
+    "p6.v1": "Gustavo Gasperin · Kyle Bartlett",
+    "p6.k2": "Base de dados",
+    "p6.v2": "700 registros · 13 variáveis",
+    "p6.k3": "Avaliação",
+    "p6.v3": "560 para treinamento · 140 para teste",
+    "p6.k4": "Minha contribuição",
+    "p6.v4": "Desenvolvimento conjunto de toda a análise",
+    "p6.results.title": "Resultados em dados de teste",
+    "p6.results.note": "Resultados apresentados no conjunto de teste com 140 registros.",
+    "p6.metric.rmse": "RMSE salarial",
+    "p6.metric.accuracy": "Acurácia da classificação",
+    "p6.metric.recall": "Recall de alto desempenho",
+    "p6.metric.linear": "Regressão linear · erro de teste apresentado",
+    "p6.metric.correct": "131 / 140 corretos · referência da classe majoritária: 81,43%",
+    "p6.metric.detected": "22 / 26 de alto desempenho identificados",
+    "p6.graphs.title": "Gráficos originais selecionados",
+    "p6.graphs.salary": "Salário e experiência, por departamento",
+    "p6.graphs.performance": "Árvore de classificação de desempenho",
+    "p6.graphs.salaryAlt": "Gráfico de dispersão original do ggplot2 de salário versus anos de experiência, com cores por departamento",
+    "p6.graphs.performanceAlt": "Árvore de classificação original de desempenho normal e alto, com divisões e classes previstas",
+    "p6.graphs.note": "Resultados originais da análise entregue em R, em inglês.",
+    "p6.graphs.zoom": "Abrir imagem em tamanho original",
+    "p6.limits.note": "Base didática acadêmica: os 700 registros foram mantidos, incluindo 39 com experiência maior que a idade. Os resultados descrevem uma única divisão de teste; as associações não estabelecem causalidade nem desempenho profissional real.",
     'meta.title': 'Gustavo Gasperin — Portfólio de Engenharia',
     'meta.desc': 'Gustavo Gasperin — Graduate Assistant de Technology Administration e mestrando em Engineering Technology na Kent State University. TI corporativa, redes e sistemas embarcados.',
 
@@ -2525,7 +3284,7 @@ window.I18N = {
 
 
     'proj.label': 'Projetos',
-    'proj.count': 'Quatro projetos · 2023 — 2025',
+    'proj.count': "Seis projetos aplicados",
     'proj.now': 'Em exibição',
     'proj.hint': 'Passe o cursor sobre um nó',
 
@@ -2539,6 +3298,13 @@ window.I18N = {
     'p1.k3': 'Desenvolvido em', 'p1.v3': 'Cisco Packet Tracer',
     'p1.k4': 'Endereçamento', 'p1.v4': 'Pilha dupla IPv4 / IPv6',
     'p1.figcap': 'Fig. 01 — Núcleo do campus; enlaces remotos em vermelho',
+    'p1.config.title': 'Configuração em execução',
+    'p1.config.device': 'Dispositivo',
+    'p1.config.choose': 'Selecione um dispositivo',
+    'p1.config.close': 'Fechar configuração',
+    'p1.config.expandDhcp': 'Ampliar visualização DHCP',
+    'p1.config.help': 'Clique em qualquer objeto do mapa para abrir este painel. Explore os exemplos de configuração usando o menu de dispositivos acima.',
+    'p1.config.empty': 'Selecione um dispositivo no menu acima para explorar os exemplos de configuração disponíveis.',
     'p1.idx': 'Networking II · Projeto final',
     'p1.card': 'Rede Corporativa',
     'p1.cardbody': 'Uma rede corporativa de médio porte para 1.000+ usuários — três prédios no campus, dois sites remotos, núcleo redundante.',
@@ -2546,6 +3312,43 @@ window.I18N = {
  'p2.v1': 'Arduino Mega 2560', 'p2.v2': 'Placa de pressão por compartimento', 'p2.v3': 'Teclado + regras por usuário', 'p2.v4': 'Liberação por servo · LCD 16x2',
  'p3.v1': 'Arduino Uno R3', 'p3.v2': 'Sensores em interrupções de hardware', 'p3.v3': 'Lógica de iluminação · retorno ao motorista', 'p3.v4': 'C · circuitos em protoboard',
  'p4.v1': 'Intel', 'p4.v2': 'Protocolo de sala limpa', 'p4.v3': 'Litografia · corrosão · metrologia',
+
+    "p5.idx": "Programação de CLP · Projeto de disciplina",
+    "p5.card": "Controlador de Arrancada",
+    "p5.cardbody": "Uma corrida de arrancada para dois jogadores em um CLP Rockwell — dois modos de largada, tempos independentes e detecção de queima de largada.",
+    "p5.tech": "Studio 5000 · Texto Estruturado<br>CLP Rockwell · IHM · E/S digitais",
+    "p5.eyebrow": "Automação industrial · Projeto de disciplina de CLP",
+    "p5.title": "Duas pistas. Um CLP. Cada ciclo conta.",
+    "p5.b1": "Programei um simulador de arrancada para dois jogadores no Studio 5000 usando Texto Estruturado, um CLP Rockwell e uma IHM. Um controlador de quatro estados coordena o posicionamento, uma espera variável, a sequência de luzes da largada e a corrida. Os dois jogadores precisam estar em posição para iniciar a sequência; a IHM apresenta uma árvore de largada, um indicador de posicionamento, uma luz de queima de largada e um visor de tempo para cada pista.",
+    "p5.b2": "A espera após o posicionamento é de aproximadamente 1–2 segundos, calculada a partir da amostragem de um temporizador em execução contínua. Uma chave física seleciona a árvore Sportsman, com três estágios amarelos sucessivos de 500 ms, ou a Pro Tree, com as três luzes amarelas acesas simultaneamente por 500 ms antes do verde. Instruções TONR comandam a sequência e os dois temporizadores independentes de corrida.",
+    "p5.b3": "A detecção de borda de subida transforma cada acionamento de botão em um único evento. Um acionamento antes do verde registra uma falha de largada para aquele jogador; após o verde, um acionamento válido congela o tempo decorrido da pista em segundos. A outra pista continua de forma independente. Ao terminar, a pista mantém o verde e pisca uma luz amarela; o reset limpa os resultados e as falhas. Entradas e saídas físicas conectam o programa às chaves de posicionamento e às lâmpadas.",
+    "p5.k1": "Plataforma",
+    "p5.v1": "Studio 5000 · CLP Rockwell + IHM",
+    "p5.k2": "Programa",
+    "p5.v2": "Texto Estruturado · 4 estados",
+    "p5.k3": "Largadas",
+    "p5.v3": "Sportsman 1,5 s · Pro Tree 0,5 s",
+    "p5.k4": "Por pista",
+    "p5.v4": "Tempo decorrido · Falha de largada",
+    "p5.ph1": "IHM de arrancada com dois visores de tempo, indicadores de posicionamento, três luzes amarelas, uma luz vermelha de queima de largada e uma luz verde por pista",
+    "p5.figcap": "IHM Rockwell · Tela de corrida para dois jogadores",
+    "p5.zoom": "Abrir imagem completa ↗",
+    "p5.demo.label": "Reprodução da IHM",
+    "p5.demo.note": "Corrida ilustrativa · Tempos e resultado simulados.",
+    "p5.demo.winner": "VENCEDOR",
+    "p5.demo.state": "Estado",
+    "p5.demo.staging": "Posicionamento · Aguardando os dois jogadores",
+    "p5.demo.wait": "Jogadores prontos · Espera variável de largada",
+    "p5.demo.tree": "Árvore de largada · Aguarde",
+    "p5.demo.racing": "Verde · Temporizadores independentes em execução",
+    "p5.demo.finished": "Jogador {player} terminou · A outra pista continua",
+    "p5.demo.foul": "Jogador {player} queimou a largada · A outra pista continua",
+    "p5.demo.result": "Jogador {player} vence · {time} s",
+    "p5.demo.reset": "Reset · Posicionando a próxima corrida",
+    "p5.source.title": "Texto Estruturado",
+    "p5.source.meta": "Programa original do controlador · Studio 5000",
+    "p5.source.label": "Código em Texto Estruturado do controlador de arrancada",
+    "p5.source.note": "Sequenciamento em quatro estados, temporizadores independentes por pista e mapeamento direto de E/S físicas.",
 
     'proj.zoom': 'Clique para ampliar',
 
@@ -2662,6 +3465,38 @@ window.I18N = {
   },
 
   it: {
+    "p6.idx": "Business Analytics · Aprile 2026",
+    "p6.card": "Analisi dei Dipendenti",
+    "p6.cardbody": "Previsione dello stipendio e classificazione delle prestazioni in R, con grafici originali e risultati sui dati di test.",
+    "p6.tech": "R · R Markdown · ggplot2<br>Regressione lineare · rpart · caret",
+    "p6.eyebrow": "Business Analytics · Progetto finale di gruppo · Aprile 2026",
+    "p6.title": "Stipendio e prestazioni, valutati con R.",
+    "p6.b1": "Kyle Bartlett e io abbiamo sviluppato insieme l'intera analisi del nostro progetto finale di Business Analytics. Con un dataset didattico di dipendenti, abbiamo studiato due compiti predittivi: stimare lo stipendio e classificare le prestazioni come normali o alte.",
+    "p6.b2": "Abbiamo controllato i valori mancanti, preparato i fattori categorici ed esplorato le relazioni con ggplot2. Una suddivisione riproducibile 80/20 (seed 123) ha riservato 560 record al training e 140 al test. Abbiamo confrontato regressione lineare e un albero di regressione rpart per lo stipendio e usato un albero di classificazione per le prestazioni. I grafici selezionati sotto sono risultati originali dell'analisi consegnata in R.",
+    "p6.k1": "Gruppo",
+    "p6.v1": "Gustavo Gasperin · Kyle Bartlett",
+    "p6.k2": "Dataset",
+    "p6.v2": "700 record · 13 variabili",
+    "p6.k3": "Valutazione",
+    "p6.v3": "560 record di training · 140 di test",
+    "p6.k4": "Il mio contributo",
+    "p6.v4": "Sviluppo congiunto dell'intera analisi",
+    "p6.results.title": "Risultati sui dati di test",
+    "p6.results.note": "Risultati riportati sul set di test di 140 record.",
+    "p6.metric.rmse": "RMSE dello stipendio",
+    "p6.metric.accuracy": "Accuratezza della classificazione",
+    "p6.metric.recall": "Recall delle alte prestazioni",
+    "p6.metric.linear": "Regressione lineare · errore di test riportato",
+    "p6.metric.correct": "131 / 140 corretti · riferimento della classe maggioritaria: 81,43%",
+    "p6.metric.detected": "22 / 26 ad alte prestazioni individuati",
+    "p6.graphs.title": "Grafici originali selezionati",
+    "p6.graphs.salary": "Stipendio ed esperienza, per reparto",
+    "p6.graphs.performance": "Albero di classificazione delle prestazioni",
+    "p6.graphs.salaryAlt": "Grafico a dispersione originale di ggplot2 dello stipendio rispetto agli anni di esperienza, con colori per reparto",
+    "p6.graphs.performanceAlt": "Albero di classificazione originale delle prestazioni normali e alte, con suddivisioni e classi previste",
+    "p6.graphs.note": "Risultati originali dell'analisi consegnata in R, in inglese.",
+    "p6.graphs.zoom": "Apri l'immagine a grandezza originale",
+    "p6.limits.note": "Dataset didattico accademico: mantenuti tutti i 700 record, inclusi 39 con esperienza superiore all'età. I risultati descrivono un solo test separato; le associazioni non dimostrano causalità né prestazioni lavorative reali.",
     'meta.title': 'Gustavo Gasperin — Portfolio di Ingegneria',
     'meta.desc': 'Gustavo Gasperin — Technology Administration Graduate Assistant e candidato M.E.T. alla Kent State University. IT aziendale, reti e sistemi embedded.',
 
@@ -2756,7 +3591,7 @@ window.I18N = {
     'chip.service': 'Assistenza Clienti',
 
     'proj.label': 'Progetti',
-    'proj.count': 'Quattro progetti · 2023 — 2025',
+    'proj.count': "Sei progetti applicati",
     'proj.now': 'In visione',
     'proj.hint': 'Passa sul nodo per isolarlo',
 
@@ -2774,6 +3609,13 @@ window.I18N = {
     'p1.k4': 'Indirizzamento',
     'p1.v4': 'Dual stack IPv4 / IPv6',
     'p1.figcap': 'Fig. 01 — Core del campus; collegamenti remoti in rosso',
+    'p1.config.title': 'Configurazione in esecuzione',
+    'p1.config.device': 'Dispositivo',
+    'p1.config.choose': 'Seleziona un dispositivo',
+    'p1.config.close': 'Chiudi configurazione',
+    'p1.config.expandDhcp': 'Espandi la vista DHCP',
+    'p1.config.help': 'Fai clic su qualsiasi oggetto della mappa per aprire questo pannello. Esplora gli esempi di configurazione dal menu dei dispositivi qui sopra.',
+    'p1.config.empty': 'Seleziona un dispositivo dal menu qui sopra per esplorare gli esempi di configurazione disponibili.',
     'p1.idx': 'Networking II · Progetto finale',
     'p1.card': 'Rete Aziendale',
     'p1.cardbody': 'Una rete aziendale di medie dimensioni per oltre 1.000 utenti — tre edifici del campus, due sedi remote, core ridondante.',
@@ -2792,6 +3634,43 @@ window.I18N = {
     'p4.v1': 'Pathways to a Semiconductor Career',
     'p4.v2': 'Intel × Kent State University',
     'p4.v3': 'Fotolitografia · RIE · ALD',
+
+    "p5.idx": "Programmazione PLC · Progetto di corso",
+    "p5.card": "Controllore Drag Race",
+    "p5.cardbody": "Una gara di accelerazione per due giocatori su PLC Rockwell — due modalità di partenza, tempi indipendenti e rilevamento delle false partenze.",
+    "p5.tech": "Studio 5000 · Structured Text<br>PLC Rockwell · HMI · I/O digitali",
+    "p5.eyebrow": "Automazione industriale · Progetto del corso PLC",
+    "p5.title": "Due corsie. Un PLC. Ogni scansione conta.",
+    "p5.b1": "Ho programmato un simulatore di drag race per due giocatori in Studio 5000 usando Structured Text, un PLC Rockwell e un HMI. Un controllore a quattro stati coordina il posizionamento, un’attesa variabile, la sequenza luminosa di partenza e la gara. Entrambi i giocatori devono essere in posizione prima dell’avvio; l’HMI presenta per ogni corsia un albero di partenza, un indicatore di posizionamento, una spia di falsa partenza e un display del tempo.",
+    "p5.b2": "L’attesa dopo il posizionamento è di circa 1–2 secondi, calcolata campionando un temporizzatore in esecuzione continua. Un selettore fisico sceglie la modalità Sportsman, con tre fasi gialle successive da 500 ms, oppure Pro Tree, con tutte e tre le luci gialle accese insieme per 500 ms prima del verde. Le istruzioni TONR gestiscono la sequenza e i due temporizzatori indipendenti di gara.",
+    "p5.b3": "Il rilevamento del fronte di salita trasforma ogni pressione di un pulsante in un singolo evento. Una pressione prima del verde memorizza una falsa partenza per quel giocatore; dopo il verde, una pressione valida blocca il tempo trascorso della corsia in secondi. L’altra corsia prosegue in modo indipendente. Le corsie che hanno terminato mantengono il verde e fanno lampeggiare una luce gialla; il reset azzera risultati ed errori. Ingressi e uscite fisici collegano il programma ai selettori di posizionamento e alle lampade.",
+    "p5.k1": "Piattaforma",
+    "p5.v1": "Studio 5000 · PLC Rockwell + HMI",
+    "p5.k2": "Programma",
+    "p5.v2": "Structured Text · 4 stati",
+    "p5.k3": "Partenze",
+    "p5.v3": "Sportsman 1,5 s · Pro Tree 0,5 s",
+    "p5.k4": "Per corsia",
+    "p5.v4": "Tempo trascorso · Falsa partenza",
+    "p5.ph1": "HMI drag race con due display del tempo, indicatori di posizionamento, tre luci gialle, una spia rossa di falsa partenza e una luce verde per corsia",
+    "p5.figcap": "HMI Rockwell · Schermata di gara per due giocatori",
+    "p5.zoom": "Apri immagine intera ↗",
+    "p5.demo.label": "Riproduzione HMI",
+    "p5.demo.note": "Gara illustrativa · Tempi e risultato simulati.",
+    "p5.demo.winner": "VINCITORE",
+    "p5.demo.state": "Stato",
+    "p5.demo.staging": "Posizionamento · In attesa di entrambi i giocatori",
+    "p5.demo.wait": "Giocatori pronti · Attesa variabile di partenza",
+    "p5.demo.tree": "Albero di partenza · Attendere",
+    "p5.demo.racing": "Verde · Temporizzatori indipendenti attivi",
+    "p5.demo.finished": "Il giocatore {player} ha finito · L’altra corsia prosegue",
+    "p5.demo.foul": "Falsa partenza del giocatore {player} · L’altra corsia prosegue",
+    "p5.demo.result": "Vince il giocatore {player} · {time} s",
+    "p5.demo.reset": "Reset · Preparazione della prossima gara",
+    "p5.source.title": "Structured Text",
+    "p5.source.meta": "Programma originale del controllore · Studio 5000",
+    "p5.source.label": "Codice Structured Text del controllore drag race",
+    "p5.source.note": "Sequenza a quattro stati, temporizzatori indipendenti per corsia e mappatura diretta degli I/O fisici.",
 
     'proj.zoom': 'Clicca per ingrandire',
 
@@ -2911,11 +3790,84 @@ window.I18N = {
 
 
 /* ============================================================
+   HERO ROBOT — CSS does the drawing and movement. JavaScript
+   only gates playback on visibility and the motion preference;
+   no animation loop, timers, model downloads or 3D runtime.
+   ============================================================ */
+(function () {
+  var root = document.querySelector('[data-hero-robot]');
+  if (!root || !window.matchMedia || !('IntersectionObserver' in window)) return;
+  var motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var visible = false;
+  function sync() {
+    root.classList.toggle('is-ready', !motion.matches);
+    root.classList.toggle('is-running', visible && !document.hidden && !motion.matches);
+  }
+  var observer = new IntersectionObserver(function (entries) {
+    visible = entries[0].isIntersecting;
+    sync();
+  }, { threshold:.15 });
+  sync();
+  observer.observe(root);
+  document.addEventListener('visibilitychange', sync);
+  if (motion.addEventListener) motion.addEventListener('change', sync);
+})();
+
+/* ============================================================
    PROJECT DIAGRAMS — drawn from data, not hand-authored SVG.
    Each diagram is a node/link graph; the renderer builds the
    markup, places link-up port markers along every edge, and
    the carousel replays the draw-in each time a slide opens.
    ============================================================ */
+/* Original Networking II device configurations, displayed as plain text. */
+var NETWORK_CONFIGS = {
+  "r1": "!\r\nversion 15.4\r\nno service timestamps log datetime msec\r\nno service timestamps debug datetime msec\r\nservice password-encryption\r\n!\r\nhostname CORE-R1\r\n!\r\n!\r\n!\r\nenable secret 5 $1$mERr$/nTgeEkcbIYcp6HNcoAG41\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nip cef\r\nno ipv6 cef\r\n!\r\n!\r\n!\r\nusername admin secret 5 $1$mERr$S3UmkqGQcDw6dk8CDb1hF.\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip domain-lookup\r\nip domain-name kent.edu\r\n!\r\n!\r\nspanning-tree mode pvst\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\ninterface GigabitEthernet0/0/0\r\n description Link to ISP\r\n ip address 209.165.200.34 255.255.255.240\r\n ip nat outside\r\n duplex auto\r\n speed auto\r\n!\r\ninterface GigabitEthernet0/0/1\r\n ip address 192.168.1.1 255.255.255.252\r\n ip nat inside\r\n duplex auto\r\n speed auto\r\n!\r\ninterface GigabitEthernet0/0/2\r\n no ip address\r\n duplex auto\r\n speed auto\r\n shutdown\r\n!\r\ninterface Vlan1\r\n no ip address\r\n shutdown\r\n!\r\nrouter ospf 1\r\n log-adjacency-changes\r\n network 192.168.11.0 0.0.0.255 area 0\r\n network 192.168.10.0 0.0.0.3 area 0\r\n network 192.168.11.0 0.0.0.3 area 0\r\n network 192.168.1.0 0.0.0.255 area 0\r\n!\r\nip nat inside source list 1 interface GigabitEthernet0/0/0 overload\r\nip classless\r\nip route 0.0.0.0 0.0.0.0 209.165.200.33 \r\nip route 192.168.11.0 255.255.255.0 192.168.1.2 \r\n!\r\nip flow-export version 9\r\n!\r\n!\r\naccess-list 1 permit 192.168.13.0 0.0.0.255\r\naccess-list 1 permit 192.168.14.0 0.0.0.255\r\naccess-list 1 permit 192.168.15.0 0.0.0.255\r\naccess-list 1 permit 192.168.16.0 0.0.0.255\r\naccess-list 1 permit 192.168.17.0 0.0.0.255\r\naccess-list 1 permit 192.168.0.0 0.0.255.255\r\naccess-list 1 permit 192.168.18.0 0.0.0.255\r\naccess-list 1 permit 192.168.19.0 0.0.0.255\r\naccess-list 1 permit 192.168.22.0 0.0.0.255\r\naccess-list 1 permit 192.168.23.0 0.0.0.255\r\naccess-list 1 permit 192.168.24.0 0.0.0.255\r\naccess-list 1 permit 192.168.25.0 0.0.0.255\r\naccess-list 1 permit 192.168.26.0 0.0.0.255\r\naccess-list 1 permit 192.168.11.0 0.0.0.255\r\naccess-list 1 permit 192.168.10.0 0.0.0.255\r\naccess-list 1 permit 192.168.12.0 0.0.0.255\r\naccess-list 1 permit 192.168.11.36 0.0.0.3\r\naccess-list 1 permit 192.168.11.24 0.0.0.3\r\n!\r\nbanner motd #Authorized Access Only#\r\n!\r\n!\r\n!\r\n!\r\nline con 0\r\n password 7 0822435C0C1A0A19020A1F17\r\n login\r\n!\r\nline aux 0\r\n!\r\nline vty 0 4\r\n password 7 0822435C0C0F110E020A1F17\r\n login\r\n transport input ssh\r\n!\r\n!\r\n!\r\nend\r\n\r\n",
+  "ms1": "!\r\nversion 16.3.2\r\nno service timestamps log datetime msec\r\nno service timestamps debug datetime msec\r\nservice password-encryption\r\n!\r\nhostname CORE-MS1\r\n!\r\n!\r\nno profinet\r\nenable secret 5 $1$mERr$/nTgeEkcbIYcp6HNcoAG41\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip cef\r\nip routing\r\n!\r\nno ipv6 cef\r\n!\r\n!\r\n!\r\nusername admin secret 5 $1$mERr$S3UmkqGQcDw6dk8CDb1hF.\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip domain-lookup\r\nip domain-name kent.edu\r\n!\r\n!\r\nspanning-tree mode pvst\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\ninterface GigabitEthernet1/0/1\r\n no switchport\r\n ip address 192.168.11.2 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:2::1/64\r\n!\r\ninterface GigabitEthernet1/0/2\r\n no switchport\r\n ip address 192.168.11.13 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:3::1/64\r\n!\r\ninterface GigabitEthernet1/0/3\r\n no switchport\r\n ip address 192.168.11.25 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:4::1/64\r\n!\r\ninterface GigabitEthernet1/0/4\r\n no switchport\r\n ip address 192.168.11.33 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:5::1/64\r\n!\r\ninterface GigabitEthernet1/0/5\r\n no switchport\r\n ip address 192.168.11.41 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:6::1/64\r\n!\r\ninterface GigabitEthernet1/0/6\r\n no switchport\r\n ip address 192.168.11.57 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:7::1/64\r\n!\r\ninterface GigabitEthernet1/0/7\r\n!\r\ninterface GigabitEthernet1/0/8\r\n!\r\ninterface GigabitEthernet1/0/9\r\n!\r\ninterface GigabitEthernet1/0/10\r\n no switchport\r\n ip address 192.168.11.53 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:8::1/64\r\n!\r\ninterface GigabitEthernet1/0/11\r\n no switchport\r\n ip address 192.168.11.82 255.255.255.252\r\n duplex auto\r\n speed auto\r\n!\r\ninterface GigabitEthernet1/0/12\r\n!\r\ninterface GigabitEthernet1/0/13\r\n!\r\ninterface GigabitEthernet1/0/14\r\n!\r\ninterface GigabitEthernet1/0/15\r\n!\r\ninterface GigabitEthernet1/0/16\r\n!\r\ninterface GigabitEthernet1/0/17\r\n!\r\ninterface GigabitEthernet1/0/18\r\n!\r\ninterface GigabitEthernet1/0/19\r\n!\r\ninterface GigabitEthernet1/0/20\r\n!\r\ninterface GigabitEthernet1/0/21\r\n!\r\ninterface GigabitEthernet1/0/22\r\n!\r\ninterface GigabitEthernet1/0/23\r\n!\r\ninterface GigabitEthernet1/0/24\r\n!\r\ninterface GigabitEthernet1/1/1\r\n!\r\ninterface GigabitEthernet1/1/2\r\n!\r\ninterface GigabitEthernet1/1/3\r\n!\r\ninterface GigabitEthernet1/1/4\r\n!\r\ninterface Vlan1\r\n no ip address\r\n shutdown\r\n!\r\nrouter ospf 1\r\n log-adjacency-changes\r\n network 192.168.11.0 0.0.0.255 area 0\r\n!\r\nip classless\r\nip route 0.0.0.0 0.0.0.0 192.168.11.1 \r\n!\r\nip flow-export version 9\r\n!\r\n!\r\n!\r\nbanner motd #Authorized Access Only#\r\n!\r\n!\r\n!\r\n!\r\nline con 0\r\n password 7 0822435C0C1A0A19020A1F17\r\n login\r\n!\r\nline aux 0\r\n!\r\nline vty 0 4\r\n password 7 0822435C0C0F110E020A1F17\r\n login\r\n transport input ssh\r\n!\r\n!\r\n!\r\n!\r\nend\r\n\r\n",
+  "ms2": "!\r\nversion 16.3.2\r\nno service timestamps log datetime msec\r\nno service timestamps debug datetime msec\r\nservice password-encryption\r\n!\r\nhostname CORE-MS2\r\n!\r\n!\r\nno profinet\r\nenable secret 5 $1$mERr$/nTgeEkcbIYcp6HNcoAG41\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip cef\r\nip routing\r\n!\r\nno ipv6 cef\r\n!\r\n!\r\n!\r\nusername admin secret 5 $1$mERr$S3UmkqGQcDw6dk8CDb1hF.\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip domain-lookup\r\nip domain-name kent.edu\r\n!\r\n!\r\nspanning-tree mode pvst\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\ninterface GigabitEthernet1/0/1\r\n no switchport\r\n ip address 192.168.11.10 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:9::1/64\r\n!\r\ninterface GigabitEthernet1/0/2\r\n no switchport\r\n ip address 192.168.11.18 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:A::1/64\r\n!\r\ninterface GigabitEthernet1/0/3\r\n no switchport\r\n ip address 192.168.11.21 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:B::1/64\r\n!\r\ninterface GigabitEthernet1/0/4\r\n no switchport\r\n ip address 192.168.11.29 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:C::1/64\r\n!\r\ninterface GigabitEthernet1/0/5\r\n no switchport\r\n ip address 192.168.11.37 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:D::1/64\r\n!\r\ninterface GigabitEthernet1/0/6\r\n no switchport\r\n ip address 192.168.11.61 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:E::1/64\r\n!\r\ninterface GigabitEthernet1/0/7\r\n!\r\ninterface GigabitEthernet1/0/8\r\n!\r\ninterface GigabitEthernet1/0/9\r\n!\r\ninterface GigabitEthernet1/0/10\r\n!\r\ninterface GigabitEthernet1/0/11\r\n!\r\ninterface GigabitEthernet1/0/12\r\n!\r\ninterface GigabitEthernet1/0/13\r\n!\r\ninterface GigabitEthernet1/0/14\r\n!\r\ninterface GigabitEthernet1/0/15\r\n!\r\ninterface GigabitEthernet1/0/16\r\n!\r\ninterface GigabitEthernet1/0/17\r\n!\r\ninterface GigabitEthernet1/0/18\r\n!\r\ninterface GigabitEthernet1/0/19\r\n!\r\ninterface GigabitEthernet1/0/20\r\n!\r\ninterface GigabitEthernet1/0/21\r\n!\r\ninterface GigabitEthernet1/0/22\r\n!\r\ninterface GigabitEthernet1/0/23\r\n!\r\ninterface GigabitEthernet1/0/24\r\n!\r\ninterface GigabitEthernet1/1/1\r\n no switchport\r\n ip address 192.168.11.65 255.255.255.252\r\n ipv6 address 2001:DB8:ABCD:F::1/64\r\n!\r\ninterface GigabitEthernet1/1/2\r\n no switchport\r\n ip address 192.168.11.73 255.255.255.252\r\n ipv6 address 2001:DB8:ABCD:10::1/64\r\n!\r\ninterface GigabitEthernet1/1/3\r\n!\r\ninterface GigabitEthernet1/1/4\r\n!\r\ninterface Vlan1\r\n no ip address\r\n shutdown\r\n!\r\nrouter ospf 1\r\n log-adjacency-changes\r\n network 192.168.11.0 0.0.0.255 area 0\r\n!\r\nip classless\r\nip route 0.0.0.0 0.0.0.0 192.168.11.17 \r\n!\r\nip flow-export version 9\r\n!\r\n!\r\n!\r\nbanner motd #Authorized Access Only#\r\n!\r\n!\r\n!\r\n!\r\nline con 0\r\n password 7 0822435C0C1A0A19020A1F17\r\n login\r\n!\r\nline aux 0\r\n!\r\nline vty 0 4\r\n password 7 0822435C0C0F110E020A1F17\r\n login\r\n transport input ssh\r\n!\r\n!\r\n!\r\n!\r\nend\r\n\r\n",
+  "ms3": "!\r\nversion 16.3.2\r\nno service timestamps log datetime msec\r\nno service timestamps debug datetime msec\r\nservice password-encryption\r\n!\r\nhostname CORE-MS3\r\n!\r\n!\r\nno profinet\r\nenable secret 5 $1$mERr$/nTgeEkcbIYcp6HNcoAG41\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip cef\r\nip routing\r\n!\r\nno ipv6 cef\r\n!\r\n!\r\n!\r\nusername admin secret 5 $1$mERr$S3UmkqGQcDw6dk8CDb1hF.\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip domain-lookup\r\nip domain-name kent.edu\r\n!\r\n!\r\nspanning-tree mode pvst\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\ninterface GigabitEthernet1/0/1\r\n no switchport\r\n ip address 192.168.1.2 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:11::1/64\r\n!\r\ninterface GigabitEthernet1/0/2\r\n no switchport\r\n ip address 192.168.11.1 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:12::1/64\r\n!\r\ninterface GigabitEthernet1/0/3\r\n no switchport\r\n ip address 192.168.11.9 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:13::1/64\r\n!\r\ninterface GigabitEthernet1/0/4\r\n no switchport\r\n ip address 192.168.11.5 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:14::1/64\r\n!\r\ninterface GigabitEthernet1/0/5\r\n!\r\ninterface GigabitEthernet1/0/6\r\n!\r\ninterface GigabitEthernet1/0/7\r\n!\r\ninterface GigabitEthernet1/0/8\r\n!\r\ninterface GigabitEthernet1/0/9\r\n!\r\ninterface GigabitEthernet1/0/10\r\n!\r\ninterface GigabitEthernet1/0/11\r\n!\r\ninterface GigabitEthernet1/0/12\r\n!\r\ninterface GigabitEthernet1/0/13\r\n!\r\ninterface GigabitEthernet1/0/14\r\n!\r\ninterface GigabitEthernet1/0/15\r\n!\r\ninterface GigabitEthernet1/0/16\r\n!\r\ninterface GigabitEthernet1/0/17\r\n!\r\ninterface GigabitEthernet1/0/18\r\n!\r\ninterface GigabitEthernet1/0/19\r\n!\r\ninterface GigabitEthernet1/0/20\r\n!\r\ninterface GigabitEthernet1/0/21\r\n!\r\ninterface GigabitEthernet1/0/22\r\n!\r\ninterface GigabitEthernet1/0/23\r\n!\r\ninterface GigabitEthernet1/0/24\r\n!\r\ninterface GigabitEthernet1/1/1\r\n!\r\ninterface GigabitEthernet1/1/2\r\n!\r\ninterface GigabitEthernet1/1/3\r\n!\r\ninterface GigabitEthernet1/1/4\r\n!\r\ninterface Vlan1\r\n no ip address\r\n shutdown\r\n!\r\nrouter ospf 1\r\n log-adjacency-changes\r\n network 192.168.11.0 0.0.0.255 area 0\r\n network 192.168.1.0 0.0.0.255 area 0\r\n!\r\nip classless\r\nip route 0.0.0.0 0.0.0.0 192.168.1.1 \r\n!\r\nip flow-export version 9\r\n!\r\n!\r\n!\r\nbanner motd #Authorized Access Only#\r\n!\r\n!\r\n!\r\n!\r\nline con 0\r\n password 7 0822435C0C1A0A19020A1F17\r\n login\r\n!\r\nline aux 0\r\n!\r\nline vty 0 4\r\n password 7 0822435C0C0F110E020A1F17\r\n login\r\n transport input ssh\r\n!\r\n!\r\n!\r\n!\r\nend\r\n\r\n",
+  "ms4": "!\r\nversion 16.3.2\r\nno service timestamps log datetime msec\r\nno service timestamps debug datetime msec\r\nservice password-encryption\r\n!\r\nhostname CORE-MS4\r\n!\r\n!\r\nno profinet\r\nenable secret 5 $1$mERr$/nTgeEkcbIYcp6HNcoAG41\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip cef\r\nip routing\r\n!\r\nno ipv6 cef\r\n!\r\n!\r\n!\r\nusername admin secret 5 $1$mERr$S3UmkqGQcDw6dk8CDb1hF.\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\nno ip domain-lookup\r\nip domain-name kent.edu\r\n!\r\n!\r\nspanning-tree mode pvst\r\n!\r\n!\r\n!\r\n!\r\n!\r\n!\r\ninterface GigabitEthernet1/0/1\r\n no switchport\r\n ip address 192.168.11.17 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:15::1/64\r\n!\r\ninterface GigabitEthernet1/0/2\r\n no switchport\r\n ip address 192.168.11.14 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:16::1/64\r\n!\r\ninterface GigabitEthernet1/0/3\r\n no switchport\r\n ip address 192.168.11.6 255.255.255.252\r\n duplex auto\r\n speed auto\r\n ipv6 address 2001:DB8:ABCD:17::1/64\r\n!\r\ninterface GigabitEthernet1/0/4\r\n!\r\ninterface GigabitEthernet1/0/5\r\n!\r\ninterface GigabitEthernet1/0/6\r\n!\r\ninterface GigabitEthernet1/0/7\r\n!\r\ninterface GigabitEthernet1/0/8\r\n!\r\ninterface GigabitEthernet1/0/9\r\n!\r\ninterface GigabitEthernet1/0/10\r\n!\r\ninterface GigabitEthernet1/0/11\r\n!\r\ninterface GigabitEthernet1/0/12\r\n!\r\ninterface GigabitEthernet1/0/13\r\n!\r\ninterface GigabitEthernet1/0/14\r\n!\r\ninterface GigabitEthernet1/0/15\r\n!\r\ninterface GigabitEthernet1/0/16\r\n!\r\ninterface GigabitEthernet1/0/17\r\n!\r\ninterface GigabitEthernet1/0/18\r\n!\r\ninterface GigabitEthernet1/0/19\r\n!\r\ninterface GigabitEthernet1/0/20\r\n!\r\ninterface GigabitEthernet1/0/21\r\n!\r\ninterface GigabitEthernet1/0/22\r\n!\r\ninterface GigabitEthernet1/0/23\r\n!\r\ninterface GigabitEthernet1/0/24\r\n!\r\ninterface GigabitEthernet1/1/1\r\n no switchport\r\n ip address 192.168.11.69 255.255.255.252\r\n ipv6 address 2001:DB8:ABCD:18::1/64\r\n!\r\ninterface GigabitEthernet1/1/2\r\n no switchport\r\n ip address 192.168.11.77 255.255.255.252\r\n ipv6 address 2001:DB8:ABCD:19::1/64\r\n!\r\ninterface GigabitEthernet1/1/3\r\n!\r\ninterface GigabitEthernet1/1/4\r\n!\r\ninterface Vlan1\r\n no ip address\r\n shutdown\r\n!\r\nrouter ospf 1\r\n log-adjacency-changes\r\n network 192.168.11.0 0.0.0.255 area 0\r\n!\r\nip classless\r\nip route 0.0.0.0 0.0.0.0 192.168.11.5 \r\n!\r\nip flow-export version 9\r\n!\r\n!\r\n!\r\nbanner motd #Authorized Access Only#\r\n!\r\n!\r\n!\r\n!\r\nline con 0\r\n password 7 0822435C0C1A0A19020A1F17\r\n login\r\n!\r\nline aux 0\r\n!\r\nline vty 0 4\r\n password 7 0822435C0C0F110E020A1F17\r\n login\r\n transport input ssh\r\n!\r\n!\r\n!\r\n!\r\nend\r\n\r\n"
+};
+var networkConfigSelected = null;
+
+/* DHCP screen transcribed from the two supplied Packet Tracer screenshots.
+   DHCP RESEARCH appears in both screenshots and is included once. */
+var DHCP_POOLS = [
+  ['DHCP NNSCLASS','192.168.25.1','192.168.11.81','192.168.25.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP PR DA','192.168.26.1','192.168.11.81','192.168.26.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP EXECUTIVEMANG','192.168.24.1','192.168.11.81','192.168.24.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP LEGAL','192.168.23.1','192.168.11.81','192.168.23.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP MARKETING','192.168.22.1','192.168.11.81','192.168.22.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP OPERATIONS','192.168.19.1','192.168.11.81','192.168.19.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP RESEARCH','192.168.18.1','192.168.11.81','192.168.18.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP IT','192.168.17.1','192.168.11.81','192.168.17.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP ADMIN','192.168.16.1','192.168.11.81','192.168.16.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP SALES','192.168.15.1','192.168.11.81','192.168.15.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP FINANCE','192.168.14.1','192.168.11.81','192.168.14.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['DHCP HR','192.168.13.1','192.168.11.81','192.168.13.4','255.255.255.0','252','0.0.0.0','0.0.0.0'],
+  ['serverPool','0.0.0.0','0.0.0.0','192.168.11.52','255.255.255.252','512','0.0.0.0','0.0.0.0']
+];
+
+function dhcpMarkup() {
+  function field(label, value) {
+    return '<span class="dhcp-field-label">' + label + '</span><span class="dhcp-field-spacer"></span><span class="dhcp-field-value">' + value + '</span>';
+  }
+  function octets(label, values) {
+    return '<span class="dhcp-octet-label">' + label + '</span>' + values.map(function (v) { return '<span class="dhcp-field-value dhcp-octet">' + v + '</span>'; }).join('');
+  }
+  return '<div class="dhcp-view" data-dhcp-view hidden tabindex="0" data-lenis-prevent role="region" aria-label="DHCP server settings and pools, read-only">' +
+    '<div class="dhcp-sheet"><div class="dhcp-title">DHCP</div><div class="dhcp-fields">' +
+    '<span class="dhcp-field-label">Interface</span><span class="dhcp-field-value dhcp-interface">FastEthernet0<span aria-hidden="true">⌄</span></span>' +
+    '<span class="dhcp-service">Service <span><i class="dhcp-radio on" aria-hidden="true"></i>On</span><span class="dhcp-off"><i class="dhcp-radio" aria-hidden="true"></i>Off</span></span>' +
+    field('Pool Name','serverPool') + field('Default Gateway','0.0.0.0') + field('DNS Server','0.0.0.0') +
+    octets('Start IP Address :',['192','168','11','52']) + octets('Subnet Mask:',['255','255','255','252']) +
+    field('Maximum Number of Users :','512') + field('TFTP Server:','0.0.0.0') + field('WLC Address:','0.0.0.0') +
+    '</div><div class="dhcp-actions" aria-hidden="true"><span>Add</span><span>Save</span><span>Remove</span></div>' +
+    '<div class="dhcp-table-scroll" tabindex="0" data-lenis-prevent role="region" aria-label="DHCP pool table"><table class="dhcp-table" aria-label="DHCP pools"><colgroup><col style="width:19%"><col style="width:12.5%"><col style="width:12.5%"><col style="width:12.5%"><col style="width:12.5%"><col style="width:6.5%"><col style="width:12.5%"><col style="width:12%"></colgroup>' +
+    '<thead><tr><th scope="col">Pool<br>Name</th><th scope="col">Default<br>Gateway</th><th scope="col">DNS<br>Server</th><th scope="col">Start<br>IP<br>Address</th><th scope="col">Subnet<br>Mask</th><th scope="col">Max<br>User</th><th scope="col">TFTP<br>Server</th><th scope="col">WLC<br>Address</th></tr></thead><tbody>' +
+    DHCP_POOLS.map(function (row) { return '<tr>' + row.map(function (cell) { return '<td>' + cell + '</td>'; }).join('') + '</tr>'; }).join('') +
+    '</tbody></table></div></div></div>';
+}
+
 var DIAGRAMS = {
   p1: {
     viewBox: '0 0 1310 545', wide: true,
@@ -2944,7 +3896,6 @@ var DIAGRAMS = {
       ['ms4','stark','remote'], ['ms4','trum','remote'], ['ms2','stark','remote'], ['ms2','trum','remote']
     ],
     notes: [
-      { x:158, y:82, lines:['ISP DEMARC CONNECTION INFORMATION','Network: 209.165.200.32/28','GigabitEthernet0/0/0   209.165.200.33','','GigabitEthernet0/0/0','FE80::2','2001:DB8:ACAD:3::1'] },
       { x:10,  y:272, lines:['WEBSITE','209.165.200.10','2001:DB8:ACAD:1::10'] }
     ]
   },
@@ -3027,6 +3978,7 @@ function buildDiagram(data) {
     label = '<text class="lbl" x="0" y="' + y + '">' + n.l + '</text>';
     if (n.s) label += '<text class="lbl sub" x="0" y="' + (y + 12) + '">' + n.s + '</text>';
     nodes += '<g class="node" data-node="' + n.id + '" tabindex="0" transform="translate(' + n.x + ' ' + n.y + ')">' +
+             '<rect x="-48" y="-24" width="96" height="72" fill="transparent" />' +
              glyphMarkup(n) + label + '</g>';
   });
 
@@ -3051,10 +4003,79 @@ function buildDiagram(data) {
          '</svg>';
 }
 
-/* Hover or focus a node: isolate it and everything it touches. */
-function wireDiagram(svg, data) {
+/* Hover or focus still isolates links; device configs remain available to read. */
+function wireDiagram(svg, data, dict) {
   var byId = {};
   data.nodes.forEach(function (n) { byId[n.id] = n; });
+  var viewer = svg.closest('.diagram-wrap').querySelector('[data-network-config]');
+  var select = viewer && viewer.querySelector('[data-config-picker]');
+  var menu = viewer && viewer.querySelector('[data-config-menu]');
+  var output = viewer && viewer.querySelector('code');
+  var pre = viewer && viewer.querySelector('pre');
+  var dhcpView = viewer && viewer.querySelector('[data-dhcp-view]');
+  var dhcpExpand = viewer && viewer.querySelector('[data-dhcp-expand]');
+  var selected = null;
+  var figure = svg.closest('.diagram-wrap');
+  var slot = figure.querySelector('.network-config-slot');
+  var open = false, resizeFrame = null, diagramMotion = null;
+
+  function measureTransition() {
+    cancelAnimationFrame(resizeFrame);
+    var until = performance.now() + 600;
+    function measureFrame() {
+      Carousel.measure();
+      if (performance.now() < until) resizeFrame = requestAnimationFrame(measureFrame);
+      else if (window.ScrollTrigger) ScrollTrigger.refresh();
+    }
+    resizeFrame = requestAnimationFrame(measureFrame);
+  }
+
+  function setOpen(value) {
+    var before = svg.getBoundingClientRect();
+    if (diagramMotion) diagramMotion.cancel();
+    open = value;
+    figure.classList.toggle('is-config-open', value);
+    if (window.matchMedia('(min-width:760px)').matches && !window.matchMedia('(prefers-reduced-motion:reduce)').matches) {
+      var after = svg.getBoundingClientRect();
+      // One transform interpolates position and scale together, including centering.
+      if (after.width && after.height) diagramMotion = svg.animate([
+        { transformOrigin:'0 0', transform:'translate(' + (before.left - after.left) + 'px,' + (before.top - after.top) + 'px) scale(' + (before.width / after.width) + ',' + (before.height / after.height) + ')' },
+        { transformOrigin:'0 0', transform:'none' }
+      ], { duration:560, easing:'cubic-bezier(.22,1,.36,1)' });
+    }
+    setMenu(false);
+    slot.inert = !value;
+    slot.setAttribute('aria-hidden', value ? 'false' : 'true');
+    svg.querySelectorAll('[data-config-device]').forEach(function (node) {
+      node.setAttribute('aria-expanded', value ? 'true' : 'false');
+    });
+    measureTransition();
+  }
+
+  function showConfig(id, activate) {
+    if (!viewer || !byId[id]) return;
+    if (activate && !open) setOpen(true);
+    if (!open || selected === id) return;
+    selected = id;
+    networkConfigSelected = id;
+    select.querySelector('span').textContent = (NETWORK_CONFIGS[id] || id === 'dhcp') ? byId[id].s : dict['p1.config.choose'];
+    pre.hidden = id === 'dhcp';
+    dhcpView.hidden = id !== 'dhcp';
+    dhcpExpand.hidden = id !== 'dhcp';
+    dhcpView.scrollTop = 0;
+    dhcpView.scrollLeft = 0;
+    // Use textContent: configuration commands are text, never page markup.
+    output.textContent = NETWORK_CONFIGS[id] || dict['p1.config.empty'];
+    pre.classList.toggle('is-empty', !NETWORK_CONFIGS[id]);
+    pre.setAttribute('aria-label', dict['p1.config.title'] + ' — ' + (byId[id].s || byId[id].l));
+    pre.scrollTop = 0;
+    pre.scrollLeft = 0;
+    svg.querySelectorAll('.node[data-config-device]').forEach(function (node) {
+      var active = node.getAttribute('data-node') === id;
+      node.classList.toggle('config-selected', active);
+      node.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
 
   function focus(id) {
     svg.classList.add('has-focus');
@@ -3079,12 +4100,80 @@ function wireDiagram(svg, data) {
 
   svg.querySelectorAll('.node').forEach(function (g) {
     var id = g.getAttribute('data-node');
+    {
+      g.setAttribute('data-config-device', '');
+      g.setAttribute('role', 'button');
+      g.setAttribute('aria-label', (byId[id].s || byId[id].l) + ' — ' + dict['p1.config.title']);
+      g.setAttribute('aria-controls', 'network-config-output');
+      g.setAttribute('aria-pressed', 'false');
+      g.setAttribute('aria-expanded', 'false');
+      g.addEventListener('click', function () { showConfig(id, true); focus(id); });
+      g.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          showConfig(id, true); focus(id);
+        }
+      });
+    }
     g.addEventListener('mouseenter', function () { focus(id); });
     g.addEventListener('focus', function () { focus(id); });
     g.addEventListener('mouseleave', clear);
     g.addEventListener('blur', clear);
   });
   svg.addEventListener('mouseleave', clear);
+  function setMenu(value) {
+    menu.hidden = !value;
+    select.setAttribute('aria-expanded', value ? 'true' : 'false');
+  }
+  if (select) {
+    dhcpExpand.addEventListener('click', function () {
+      var dialog = document.createElement('dialog');
+      dialog.className = 'dhcp-dialog';
+      dialog.setAttribute('aria-label', 'DHCP');
+      var head = document.createElement('div');
+      head.className = 'dhcp-dialog-head';
+      var title = document.createElement('span');
+      title.textContent = 'DHCP';
+      var close = document.createElement('button');
+      close.type = 'button'; close.className = 'dhcp-dialog-close';
+      close.textContent = '×'; close.setAttribute('aria-label', dict['p1.config.close']);
+      head.appendChild(title); head.appendChild(close); dialog.appendChild(head);
+      var copy = dhcpView.cloneNode(true);
+      copy.hidden = false; dialog.appendChild(copy); document.body.appendChild(dialog);
+      close.addEventListener('click', function () { dialog.close(); });
+      dialog.addEventListener('close', function () { dialog.remove(); dhcpExpand.focus({ preventScroll:true }); });
+      dialog.showModal();
+    });
+    var choices = Array.prototype.slice.call(menu.querySelectorAll('button'));
+    select.addEventListener('click', function () { setMenu(menu.hidden); });
+    select.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault(); setMenu(true); choices[e.key === 'ArrowDown' ? 0 : choices.length - 1].focus();
+      }
+    });
+    choices.forEach(function (button, i) {
+      button.addEventListener('click', function () { showConfig(button.getAttribute('data-config-option')); setMenu(false); select.focus(); });
+      button.addEventListener('keydown', function (e) {
+        var next = e.key === 'ArrowDown' ? (i + 1) % choices.length : e.key === 'ArrowUp' ? (i + choices.length - 1) % choices.length : e.key === 'Home' ? 0 : e.key === 'End' ? choices.length - 1 : null;
+        if (next !== null) { e.preventDefault(); choices[next].focus(); }
+      });
+    });
+    viewer.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) { e.preventDefault(); setMenu(false); select.focus(); } });
+    figure.addEventListener('pointerdown', function (e) { if (!e.target.closest('.config-picker')) setMenu(false); });
+    viewer.querySelector('.config-picker').addEventListener('focusout', function (e) { if (!this.contains(e.relatedTarget)) setMenu(false); });
+    viewer.querySelector('[data-config-close]').addEventListener('click', function () {
+      var previous = selected;
+      setOpen(false);
+      networkConfigSelected = null;
+      selected = null;
+      svg.querySelectorAll('[data-config-device]').forEach(function (node) {
+        node.classList.remove('config-selected');
+        node.setAttribute('aria-pressed', 'false');
+      });
+      if (previous) svg.querySelector('.node[data-node="' + previous + '"]').focus({ preventScroll:true });
+    });
+    if (networkConfigSelected) showConfig(networkConfigSelected, true);
+  }
 }
 
 function diagramLive() {
@@ -3602,6 +4691,171 @@ var BCM = (function () {
 })();
 
 /* ============================================================
+   DRAG RACE — an illustrative playback over the original HMI.
+   The source program remains unchanged. Demo finish events and
+   the visual comparison of their times belong to this playback.
+   ============================================================ */
+var DragRace = (function () {
+  var scenarios = [
+    { mode:'Sportsman', wait:1400, times:[2184,2657], foul:-1 },
+    { mode:'Pro Tree', wait:1800, times:[2372,1946], foul:-1 },
+    { mode:'Sportsman', wait:1200, times:[0,2318], foul:0 }
+  ];
+  var host = null, dict = null, nodes = null, observer = null, motion = null;
+  var active = false, inView = false, raf = null, elapsed = 0, last = null, round = 0;
+
+  // Pure timing model: 4 sequence states, 500 ms tree steps, independent lanes.
+  function sample(time, scenario) {
+    var treeAt = 1000 + scenario.wait;
+    var greenAt = treeAt + (scenario.mode === 'Pro Tree' ? 500 : 1500);
+    var finishAt = greenAt + Math.max.apply(null, scenario.times);
+    var duration = finishAt + 3800;
+    var resetting = time >= finishAt + 3000;
+    var seq = resetting || time < 1000 ? 0 : time < treeAt ? 1 : time < greenAt ? 2 : 3;
+    var state = { seq:seq, stage:[], amber:[], green:[], red:[], times:[], finished:[],
+      winner:-1, player:-1, phase:resetting ? 'reset' : ['staging','wait','tree','racing'][seq],
+      duration:duration, progress:Math.min(time / duration, 1) };
+    for (var lane = 0; lane < 2; lane++) {
+      var fault = !resetting && scenario.foul === lane && time >= greenAt - 250;
+      var finished = !resetting && !fault && time >= greenAt + scenario.times[lane];
+      state.red[lane] = fault;
+      state.finished[lane] = finished;
+      state.stage[lane] = !resetting && !fault && time >= (lane === 0 ? 250 : 1000);
+      state.green[lane] = !resetting && !fault && time >= greenAt;
+      state.times[lane] = state.green[lane] ? Math.min(time - greenAt, scenario.times[lane]) / 1000 : 0;
+      state.amber[lane] = [false,false,false];
+      if (seq === 2 && !fault) {
+        if (scenario.mode === 'Pro Tree') state.amber[lane] = [true,true,true];
+        else state.amber[lane][Math.min(2, Math.floor((time - treeAt) / 500))] = true;
+      }
+      // The original program flashes the third amber for each completed lane.
+      if (finished) state.amber[lane][2] = time % 1000 < 500;
+    }
+    if (seq === 3 && time >= finishAt) {
+      state.winner = scenario.foul === 0 ? 1 : scenario.foul === 1 ? 0 : scenario.times[0] < scenario.times[1] ? 0 : 1;
+      state.player = state.winner;
+      state.phase = 'result';
+    } else if (!resetting && state.red.some(Boolean)) {
+      state.player = scenario.foul;
+      state.phase = 'foul';
+    } else if (state.finished.some(Boolean)) {
+      state.player = state.finished[0] ? 0 : 1;
+      state.phase = 'finished';
+    }
+    return state;
+  }
+
+  function overlay(d) {
+    var out = '<svg class="race-overlay" viewBox="0 0 811 614" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">' +
+      '<defs>' +
+      '<radialGradient id="race-amber"><stop stop-color="#fffbd2"/><stop offset=".4" stop-color="#fff55a" stop-opacity=".95"/><stop offset="1" stop-color="#ffe500" stop-opacity=".32"/></radialGradient>' +
+      '<radialGradient id="race-green"><stop stop-color="#e1ffce"/><stop offset=".4" stop-color="#64ff85" stop-opacity=".96"/><stop offset="1" stop-color="#19e961" stop-opacity=".4"/></radialGradient>' +
+      '<radialGradient id="race-red"><stop stop-color="#ffe4d2"/><stop offset=".4" stop-color="#ff6a46" stop-opacity=".95"/><stop offset="1" stop-color="#ff2424" stop-opacity=".42"/></radialGradient>' +
+      '</defs>';
+    [277,515].forEach(function (x, lane) {
+      [166,262,358].forEach(function (y, step) {
+        out += '<circle class="race-lamp" data-race-amber="' + lane + '-' + step + '" cx="' + x + '" cy="' + y + '" r="36" fill="url(#race-amber)"/>';
+      });
+      out += '<circle class="race-lamp" data-race-red="' + lane + '" cx="' + x + '" cy="454" r="36" fill="url(#race-red)"/>' +
+        '<circle class="race-lamp" data-race-green="' + lane + '" cx="' + x + '" cy="550" r="36" fill="url(#race-green)"/>';
+      var left = lane === 0, center = left ? 114 : 674;
+      out += '<circle class="race-lamp" data-race-stage="' + lane + '" cx="' + (left ? 111.5 : 670.5) + '" cy="358" r="8" fill="url(#race-amber)"/>' +
+        '<rect x="' + (left ? 109 : 671) + '" y="202" width="82" height="29" fill="#fff"/>' +
+        '<text class="race-time" data-race-time="' + lane + '" x="' + (left ? 188 : 750) + '" y="225">000.000</text>' +
+        '<g class="race-winner" data-race-winner="' + lane + '">' +
+          '<rect x="' + (left ? 27 : 586) + '" y="127" width="174" height="276" fill="none" stroke="#238651" stroke-width="3"/>' +
+          '<rect x="' + (center - 59) + '" y="180" width="118" height="19" rx="2" fill="#176b43"/>' +
+          '<text x="' + center + '" y="193.5" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-weight="700" font-size="11" letter-spacing="1.5">' + d['p5.demo.winner'] + '</text></g>';
+    });
+    return out + '</svg>';
+  }
+
+  function paint(state) {
+    if (!host) return;
+    for (var lane = 0; lane < 2; lane++) {
+      nodes.stage[lane].classList.toggle('is-lit', state.stage[lane]);
+      nodes.green[lane].classList.toggle('is-lit', state.green[lane]);
+      nodes.red[lane].classList.toggle('is-lit', state.red[lane]);
+      nodes.winner[lane].classList.toggle('is-winner', state.winner === lane);
+      nodes.time[lane].textContent = state.times[lane].toFixed(3).padStart(7, '0');
+      for (var step = 0; step < 3; step++) nodes.amber[lane][step].classList.toggle('is-lit', state.amber[lane][step]);
+    }
+    var status = dict['p5.demo.' + state.phase].replace('{player}', String(state.player + 1));
+    if (state.winner !== -1) status = status.replace('{time}', state.times[state.winner].toFixed(3));
+    // Only phase changes update the status text; numeric displays are not live regions.
+    if (nodes.status.textContent !== status) nodes.status.textContent = status;
+    nodes.status.classList.toggle('is-result', state.phase === 'result');
+    nodes.status.classList.toggle('is-fault', state.phase === 'foul');
+    nodes.mode.textContent = scenarios[round].mode;
+    nodes.state.textContent = dict['p5.demo.state'] + ' 0' + state.seq;
+    nodes.progress.style.transform = 'scaleX(' + state.progress.toFixed(4) + ')';
+    host.setAttribute('data-race-phase', state.phase);
+  }
+
+  function canPlay() { return host && active && inView && !document.hidden && !motion.matches; }
+  function tick(now) {
+    raf = null;
+    if (!canPlay()) return;
+    if (last !== null) elapsed += now - last;
+    last = now;
+    var state = sample(elapsed, scenarios[round]);
+    if (elapsed >= state.duration) {
+      elapsed = 0;
+      round = (round + 1) % scenarios.length;
+      state = sample(0, scenarios[round]);
+    }
+    paint(state);
+    raf = requestAnimationFrame(tick);
+  }
+  function sync() {
+    if (!host) return;
+    if (motion.matches) {
+      round = 0;
+      paint(sample(7000, scenarios[0]));
+    }
+    var playing = !!canPlay();
+    host.classList.toggle('is-playing', playing);
+    if (playing && raf === null) { last = null; raf = requestAnimationFrame(tick); }
+    if (!playing) { if (raf !== null) cancelAnimationFrame(raf); raf = null; last = null; }
+  }
+  function stop() { active = false; sync(); }
+  function start() { active = true; sync(); }
+  function destroy() {
+    stop();
+    if (observer) observer.disconnect();
+    if (motion && motion.removeEventListener) motion.removeEventListener('change', sync);
+    document.removeEventListener('visibilitychange', sync);
+    host = null; nodes = null; observer = null; motion = null;
+    elapsed = 0; last = null; round = 0; inView = false;
+  }
+  function mount(slide, d) {
+    destroy();
+    host = slide.querySelector('[data-race-demo]');
+    if (!host) return;
+    dict = d;
+    var project = host.closest('.plc-project');
+    nodes = { stage:[], amber:[], green:[], red:[], time:[], winner:[],
+      status:host.querySelector('[data-race-status]'), mode:host.querySelector('[data-race-mode]'),
+      state:project.querySelector('[data-race-state]'), progress:host.querySelector('[data-race-progress]') };
+    for (var lane = 0; lane < 2; lane++) {
+      ['stage','green','red','time','winner'].forEach(function (kind) { nodes[kind][lane] = host.querySelector('[data-race-' + kind + '="' + lane + '"]'); });
+      nodes.amber[lane] = [];
+      for (var step = 0; step < 3; step++) nodes.amber[lane][step] = host.querySelector('[data-race-amber="' + lane + '-' + step + '"]');
+    }
+    motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (motion.addEventListener) motion.addEventListener('change', sync);
+    document.addEventListener('visibilitychange', sync);
+    paint(sample(0, scenarios[0]));
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(function (entries) { inView = entries[0].isIntersecting; sync(); }, { threshold:.2 });
+      observer.observe(host.querySelector('.shot-frame'));
+    } else inView = true;
+    sync();
+  }
+  return { overlay:overlay, mount:mount, start:start, stop:stop, destroy:destroy };
+})();
+
+/* ============================================================
    CAROUSEL — the dark panel cycles; the white cards steer it.
    ============================================================ */
 var PROJECTS = [
@@ -3626,11 +4880,15 @@ var PROJECTS = [
       { src: 'images/semiconductor-wafer.jpg', w: 1764, h: 1536,  cap: 'p4.ph2' },
       { src: 'images/semiconductor-poster-session.jpg', w: 1459, h: 924, cap: 'p4.ph3' },
       { src: 'images/semiconductor-fanuc.jpg', w: 1280, h: 1706,  cap: 'p4.ph4' }
-    ] }
+    ] },
+  { key: 'p5', rows: 4, paras: 3, figure: 'plc',
+    chips: ['Studio 5000','Rockwell PLC','HMI','Structured Text','TONR','State machine','Rising-edge detection','Digital I/O'] },
+  { key: 'p6', rows: 4, paras: 2, figure: 'analytics',
+    chips: ['R','R Markdown','tidyverse','caret','rpart','ggplot2'] }
 ];
 
 var Carousel = (function () {
-  var HOLD = 60000;
+  var HOLD = 120000;
   var root, wrap, slides = [], cards = [], idx = 0, timer = null;
   var armed = false, paused = false, onScreen = true;
   /* The topology draws when the reader actually reaches it. The panel is
@@ -3638,9 +4896,41 @@ var Carousel = (function () {
      section would fire while the diagram is still below the fold. This
      watches the <svg> itself, and re-arms it on the way out so coming
      back plays it again. */
-  var diagramWatch = null;
+  var diagramWatch = null, slideResize = null;
 
   function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  /* Selected results and original plots from the uploaded Group_4 analysis.
+     High-performance recall is 22/26 from its confusion matrix; no model is refit. */
+  function analyticsMarkup(dict) {
+    var locale = window.__lang === 'pt' ? 'pt-BR' : window.__lang === 'it' ? 'it-IT' : 'en-US';
+    var whole = new Intl.NumberFormat(locale, { maximumFractionDigits:0 });
+    var decimal = new Intl.NumberFormat(locale, { minimumFractionDigits:2, maximumFractionDigits:2 });
+    function t(key) { return esc(dict['p6.' + key] || '').replace(/"/g, '&quot;'); }
+    function money(value) { return '$' + whole.format(value); }
+    function rate(value) { return decimal.format(value) + '%'; }
+    var metrics = [
+      ['rmse', money(6110.879), 'linear'],
+      ['accuracy', rate(131 / 140 * 100), 'correct'], ['recall', rate(22 / 26 * 100), 'detected']
+    ].map(function (m) {
+      return '<div class="analytics-metric"><dt>' + t('metric.' + m[0]) + '</dt><dd>' + esc(m[1]) +
+        '<p>' + t('metric.' + m[2]) + '</p></dd></div>';
+    }).join('');
+    var graphs = [
+      ['salary','images/employee-analytics-salary-experience.png'],
+      ['performance','images/employee-analytics-performance-tree.png']
+    ].map(function (graph) {
+      return '<figure><a class="analytics-graph-link" href="' + graph[1] + '" target="_blank" rel="noopener" aria-label="' + t('graphs.' + graph[0] + 'Alt') + '">' +
+        '<img src="' + graph[1] + '" width="1344" height="960" alt="' + t('graphs.' + graph[0] + 'Alt') + '" loading="lazy" decoding="async"></a>' +
+        '<figcaption><span>' + t('graphs.' + graph[0]) + '</span><a href="' + graph[1] + '" target="_blank" rel="noopener">' + t('graphs.zoom') + ' ↗</a></figcaption></figure>';
+    }).join('');
+    return '<section class="analytics-project" aria-labelledby="employee-results-title">' +
+      '<div class="analytics-heading"><h4 id="employee-results-title">' + t('results.title') + '</h4><p>' + t('results.note') + '</p></div>' +
+      '<dl class="analytics-metrics">' + metrics + '</dl>' +
+      '<div class="analytics-heading analytics-graphs-heading"><h4>' + t('graphs.title') + '</h4><p>' + t('graphs.note') + '</p></div>' +
+      '<div class="analytics-graphs">' + graphs + '</div>' +
+      '<p class="analytics-note">' + t('limits.note') + '</p></section>';
+  }
 
   function slideMarkup(p, dict, i) {
     var body = '';
@@ -3657,8 +4947,25 @@ var Carousel = (function () {
 
     var figure = '';
     if (p.figure === 'diagram') {
-      figure = '<figure class="diagram-wrap">' +
+      var devices = DIAGRAMS[p.key].nodes.filter(function (n) { return !!NETWORK_CONFIGS[n.id] || n.id === 'dhcp'; });
+      var configViewer = '<div class="network-config-slot" inert aria-hidden="true"><div class="network-config-clip"><div class="network-config" data-network-config role="region" aria-labelledby="network-config-title">' +
+          '<div class="network-config-head">' +
+            '<h4 class="network-config-title" id="network-config-title">' + esc(dict['p1.config.title']) + '</h4>' +
+            '<button type="button" class="dhcp-expand" data-dhcp-expand hidden aria-label="' + esc(dict['p1.config.expandDhcp']) + '" title="' + esc(dict['p1.config.expandDhcp']) + '">↗</button>' +
+            '<button type="button" class="network-config-close" data-config-close aria-label="' + esc(dict['p1.config.close']) + '">&times;</button>' +
+            '<div class="network-config-select"><span id="config-device-label">' + esc(dict['p1.config.device']) + '</span>' +
+              '<div class="config-picker"><button type="button" class="config-picker-trigger" data-config-picker aria-labelledby="config-device-label config-device-value" aria-expanded="false" aria-controls="config-device-menu" aria-haspopup="menu"><span id="config-device-value">' + esc(dict['p1.config.choose']) + '</span></button>' +
+                '<div class="config-picker-menu" id="config-device-menu" data-config-menu role="menu" aria-labelledby="config-device-label" hidden>' +
+                devices.map(function (n) { return '<button type="button" role="menuitem" data-config-option="' + n.id + '">' + esc(n.s) + '</button>'; }).join('') +
+              '</div></div></div>' +
+          '</div>' +
+          '<p class="network-config-help">' + esc(dict['p1.config.help']) + '</p>' +
+          '<pre id="network-config-output" tabindex="0" data-lenis-prevent aria-label="' + esc(dict['p1.config.title']) + '"><code>' + esc(dict['p1.config.empty']) + '</code></pre>' +
+          dhcpMarkup() +
+        '</div></div></div>';
+      figure = '<figure class="diagram-wrap diagram-wrap--configs">' +
                  '<div class="diagram-scroll" data-lenis-prevent>' + buildDiagram(DIAGRAMS[p.key]) + '</div>' +
+                 configViewer +
                  '<figcaption class="feature-cap">' +
                    '<span>' + esc(dict[p.key + '.figcap'] || '') + '</span>' +
                    '<span>' + esc(dict['proj.hint'] || '') + '</span>' +
@@ -3672,6 +4979,33 @@ var Carousel = (function () {
                    '<span>' + esc(dict['proj.live'] || '') + '</span>' +
                  '</figcaption>' +
                '</figure>';
+    } else if (p.figure === 'plc') {
+      var source = document.getElementById('drag-race-source').textContent.replace(/^\s*\n/, '').trimEnd();
+      var listing = source.split('\n').map(function (line) {
+        return '<span class="source-line' + (/^\s*\/\//.test(line) ? ' is-comment' : '') + '">' + esc(line) + '</span>';
+      }).join('\n');
+      figure = '<div class="plc-project">' +
+        '<figure class="plc-hmi" data-race-demo>' +
+          '<div class="race-head"><span class="race-live">' + esc(dict['p5.demo.label']) + '</span><span class="race-mode" data-race-mode>Sportsman</span></div>' +
+          '<a class="shot plc-hmi-link" href="images/drag-race-hmi.png" target="_blank" rel="noopener" aria-label="' + esc(dict['p5.zoom']) + '">' +
+            '<span class="shot-frame"><img src="images/drag-race-hmi.png" width="811" height="614" alt="' + esc(dict['p5.ph1']) + '" loading="lazy" decoding="async" />' +
+            DragRace.overlay(dict) +
+            '<span class="shot-missing">images/drag-race-hmi.png</span></span>' +
+          '</a>' +
+          '<figcaption class="feature-cap"><span>' + esc(dict['p5.figcap']) + '</span>' +
+            '<a href="images/drag-race-hmi.png" target="_blank" rel="noopener">' + esc(dict['p5.zoom']) + '</a></figcaption>' +
+          '<p class="race-status" data-race-status aria-live="off">' + esc(dict['p5.demo.staging']) + '</p>' +
+          '<p class="race-note">' + esc(dict['p5.demo.note']) + '</p><div class="race-progress" aria-hidden="true"><span data-race-progress></span></div>' +
+        '</figure>' +
+        '<section class="plc-source" aria-labelledby="drag-race-source-title">' +
+          '<div class="source-head"><h4 class="source-title" id="drag-race-source-title">' + esc(dict['p5.source.title']) + '</h4>' +
+            '<span class="race-state" data-race-state>' + esc(dict['p5.demo.state']) + ' 00</span></div>' +
+          '<div class="source-meta"><span>' + esc(dict['p5.source.meta']) + '</span></div>' +
+          '<p class="source-note">' + esc(dict['p5.source.note']) + '</p>' +
+          '<pre class="source-code" tabindex="0" data-lenis-prevent role="region" aria-label="' + esc(dict['p5.source.label']) + '"><code>' + listing + '</code></pre>' +
+        '</section></div>';
+    } else if (p.figure === 'analytics') {
+      figure = analyticsMarkup(dict);
     } else if (p.figure === 'gallery') {
       var shots = p.photos.map(function (ph) {
         var cls = 'shot' + (ph.doc ? ' shot--doc' : '') + (ph.wide ? ' shot--wide' : '');
@@ -3752,23 +5086,31 @@ var Carousel = (function () {
 
   function render(dict) {
     if (!wrap) return;
+    DragRace.destroy();
     wrap.innerHTML = PROJECTS.map(function (p, i) { return slideMarkup(p, dict, i); }).join('');
     slides = Array.prototype.slice.call(wrap.querySelectorAll('.slide'));
     slides.forEach(function (sl, i) {
       var svg = sl.querySelector('.diagram');
       if (svg && DIAGRAMS[PROJECTS[i].key]) {
-        wireDiagram(svg, DIAGRAMS[PROJECTS[i].key]);
+        wireDiagram(svg, DIAGRAMS[PROJECTS[i].key], dict);
         armDiagram(svg);
       }
       if (sl.querySelector('[data-bcm]')) BCM.mount(sl, dict);
+      if (sl.querySelector('[data-race-demo]')) DragRace.mount(sl, dict);
       sl.querySelectorAll('.shot img').forEach(function (img) {
         var flag = function () { img.closest('.shot').classList.add('is-missing'); };
         img.addEventListener('error', flag);
         if (img.complete && img.naturalWidth === 0) flag();
       });
     });
+    // Lazy images and responsive content can change the active slide height.
+    if (slideResize) slideResize.disconnect();
+    if (window.ResizeObserver) {
+      slideResize = new ResizeObserver(measure);
+      slides.forEach(function (slide) { slideResize.observe(slide); });
+    }
     measure();
-    if (armed) playFigure(slides[idx]);
+    if (armed || slides[idx].querySelector('[data-race-demo]')) playFigure(slides[idx]);
   }
 
   /* The topology draws itself; photos use the site's deal animation. */
@@ -3786,6 +5128,14 @@ var Carousel = (function () {
 
   function playFigure(slide) {
     if (!slide) return;
+    if (slide.querySelector('[data-race-demo]')) {
+      BCM.stop();
+      unwatchDiagram();
+      DragRace.start();
+      dealShots(slide);
+      return;
+    }
+    DragRace.stop();
     if (slide.querySelector('[data-bcm]')) {
       unwatchDiagram();
       BCM.start();

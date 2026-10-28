@@ -1632,16 +1632,8 @@ html.anim .shot{opacity:0}
 }
 .fld-count{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ink-38)}
 
-/* honeypot — off-screen, never announced, never tabbable */
-.hp{
-  position:absolute !important;
-  left:-9999px !important;
-  top:auto;
-  width:1px;height:1px;
-  overflow:hidden;
-  opacity:0;
-  pointer-events:none;
-}
+/* Checkbox honeypot stays hidden and avoids text-field autofill. */
+.hp{display:none !important}
 
 .form-foot{
   grid-column:1 / -1;
@@ -2648,11 +2640,9 @@ html[data-theme="dark"] body::after{opacity:.07}
             <input type="hidden" name="from_name" value="Gustavo Gasperin — Portfolio" />
             <input type="hidden" name="redirect" value="" data-redirect />
 
-            <!-- honeypot: a real person never sees or tabs into this -->
-            <div class="hp" aria-hidden="true">
-              <label for="cf-company">Company</label>
-              <input type="text" id="cf-company" name="botcheck" tabindex="-1" autocomplete="off" />
-            </div>
+            <!-- Checkbox honeypot: hidden from visitors and ignored by text autofill. -->
+            <input type="checkbox" name="botcheck" class="hp" hidden
+                   tabindex="-1" autocomplete="off" aria-hidden="true" />
 
             <div class="fld" data-field="name">
               <label for="cf-name"><span data-i18n="form.name">Name</span><span class="req">*</span></label>
@@ -17301,8 +17291,8 @@ var CONTACT = {
     if (busy) return;
     clearStatus();
 
-    // 1. honeypot — only a bot fills a field it cannot see
-    if (clean(form.elements.botcheck && form.elements.botcheck.value)) {
+    // 1. honeypot — test checked state; an unchecked checkbox still has a value.
+    if (form.elements.botcheck && form.elements.botcheck.checked) {
       setStatus('bad', t('form.errBot', 'Submission blocked.'));
       return;
     }

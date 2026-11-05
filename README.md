@@ -31,7 +31,7 @@ The portfolio presents nine projects across five sections:
 
 ## Technology and dependencies
 
-The site uses vanilla HTML, CSS, and JavaScript in a single `index.html`. It has no application framework or build step and is published through [GitHub Pages](https://docs.github.com/en/pages).
+The portfolio uses vanilla HTML, CSS, and JavaScript in `index.html`, with a standalone `resume.html` page. It has no application framework or build step and is published through [GitHub Pages](https://docs.github.com/en/pages).
 
 | Component | Purpose and implementation |
 | --- | --- |
@@ -47,6 +47,7 @@ Third-party components retain their own licenses and terms. See the [GSAP licens
 
 ```text
 index.html                       Site markup, styles, scripts, and translations
+resume.html                      Standalone resume, opened in a new tab
 images/                          Photographs, certificates, drawings, and project images
 assets/vendor/                   Archived third-party distribution and license notices
 README.md                        Portfolio overview, references, and permissions
@@ -54,7 +55,7 @@ LICENSE                          Rights and permissions notice for original mate
 PORTFOLIO_SITE_DOCUMENTATION.md  Detailed maintenance reference
 ```
 
-The displayed ladder diagrams, PLC source listings, and CNC program are embedded in `index.html`. Separate ladder `.svg` files are not required for the live page. The `source/`, `tmp/`, and `output/` directories contain reference archives or verification artifacts and are not required for the live website. The Resume button expects `resume.pdf` at the repository root.
+The displayed ladder diagrams, PLC source listings, and CNC program are embedded in `index.html`. Separate ladder `.svg` files are not required for the live page. The `source/`, `tmp/`, and `output/` directories contain reference archives or verification artifacts and are not required for the live website. Resume links in both navigation menus and the contact section open `resume.html` from the repository root in a new tab. The resume links back to `index.html`, and its QR codes open the portfolio homepage in the selected language.
 
 ## Acknowledgments and references
 

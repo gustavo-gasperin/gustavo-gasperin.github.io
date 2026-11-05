@@ -49,10 +49,8 @@ Third-party components retain their own licenses and terms. See the [GSAP licens
 index.html                       Site markup, styles, scripts, and translations
 resume.html                      Standalone resume, opened in a new tab
 images/                          Photographs, certificates, drawings, and project images
-assets/vendor/                   Archived third-party distribution and license notices
 README.md                        Portfolio overview, references, and permissions
 LICENSE                          Rights and permissions notice for original materials
-PORTFOLIO_SITE_DOCUMENTATION.md  Detailed maintenance reference
 ```
 
 The displayed ladder diagrams, PLC source listings, and CNC program are embedded in `index.html`. Separate ladder `.svg` files are not required for the live page. The `source/`, `tmp/`, and `output/` directories contain reference archives or verification artifacts and are not required for the live website. Resume links in both navigation menus and the contact section open `resume.html` from the repository root in a new tab. The resume links back to `index.html`, and its QR codes open the portfolio homepage in the selected language.
